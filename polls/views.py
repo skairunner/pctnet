@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404, HttpResponse
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Question
 
 
 # Create your views here.
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_questions'
 

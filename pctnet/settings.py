@@ -28,13 +28,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
 
 # Application definition
 
 INSTALLED_APPS = [
+    'stories.apps.StoriesConfig',
+    'templates.apps.TemplatesConfig',
     'polls.apps.PollsConfig',
+    'login.apps.LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,12 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pctnet.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -97,6 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = '/login/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
