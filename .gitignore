@@ -2,7 +2,7 @@
 *.swp
 
 # Secrets
-runserver.sh
+manage.sh
 
 ## Below are Python defaults
 # Byte-compiled / optimized / DLL files
