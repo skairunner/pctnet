@@ -37,6 +37,7 @@ DATABASES['default'] = dj_database_url.config()
 # Application definition
 
 INSTALLED_APPS = [
+    'profiles.apps.ProfilesConfig',
     'stories.apps.StoriesConfig',
     'templates.apps.TemplatesConfig',
     'polls.apps.PollsConfig',
