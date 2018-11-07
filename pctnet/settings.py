@@ -37,6 +37,7 @@ DATABASES['default'] = dj_database_url.config()
 # Application definition
 
 INSTALLED_APPS = [
+    'rules.apps.AutodiscoverRulesConfig',
     'profiles.apps.ProfilesConfig',
     'stories.apps.StoriesConfig',
     'templates.apps.TemplatesConfig',
@@ -79,6 +80,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pctnet.wsgi.application'
+
+AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
