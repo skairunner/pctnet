@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="navigation">
+  {% if previous_chapter %}
+  <a href="{{ previous_chapter }}"><button>Previous Chapter</button></a>
+  {% endif %}
+  {% if next_chapter %}
+  <a href="{{ next_chapter }}"><button>Next Chapter</button></a>
+  {% endif %}
+  <select id="chapterlist">
+    {% for i, chapterid, title in chapter_list %}
+    <option value="{{ chapterid }}" {% if this_chapter == chapterid %} selected="selected" {% endif %}> {{ i }}. {{ title }} </option>
+    {% endfor %}
+  </select>
+</div>
+<h1>{{ object.worktitle }}</h1>
+<h2>By {{object.author }}</h2>
+<h3>Date posted: {{ object.dateposted }} </h3>
+<div><i>Work summary:</i> {{ object.parent.worksummary }} </div>
+<hr>
+<div><i>Chapter summary:</i> {{ object.chaptersummary |safe }} </div>
+<hr>
+<div>{{ object.chaptertext |safe }}</div>
+{% endblock %}
+
