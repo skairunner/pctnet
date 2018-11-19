@@ -17,6 +17,7 @@ class ChapterDetailView(DetailView):
         data = super(ChapterDetailView, self).get_context_data(**kwargs)
         # Get chapter list and current chapter
         chapterset = self.object.parent.chapter_set.all().order_by('chapterorder')
+
         # Find current
         i = 0
         for chap in chapterset:
@@ -27,9 +28,14 @@ class ChapterDetailView(DetailView):
             data['previous_chapter'] = chapterset[i-1].get_absolute_url()
         if i + 1 < len(chapterset):
             data['next_chapter'] = chapterset[i+1].get_absolute_url()
+
         # List of all chapters
         data['chapter_list'] = [(i+1, x.id, x.chaptertitle) for i, x in enumerate(chapterset)]
         data['this_chapter'] = self.object.id
+
+        # Provide comments
+        data['comments'] = self.object.comment_set.all().filter(isdeleted=False)
+
         return data
 
 

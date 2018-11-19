@@ -52,6 +52,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     dateposted = models.DateTimeField()
     commenttext = models.CharField(max_length=4250)
+    isdeleted = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return f"{redirect(reverse('chapter-only-view', args=[self.parent.id]))}#{self.id}"
