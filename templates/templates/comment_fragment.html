@@ -6,6 +6,7 @@
   <b>{% include "user_inline_fragment.html" with user=comment.author %} said:</b> {{ comment.commenttext | safe }}
   {% if user.is_authenticated %}
     {% test_rule 'can_delete_comment' user comment as candelete %}
+    {{ user.pk }} {{ comment.author.pk }} {{ candelete }}
     {% if candelete %}
     <form action="% url 'delete_comment' pk=comment.pk %">
       {% csrf_token %}

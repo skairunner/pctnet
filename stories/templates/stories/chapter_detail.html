@@ -15,7 +15,7 @@
   </select>
 </div>
 <h1>{{ object.parent.worktitle }}</h1>
-<h2>By {{object.author }}</h2>
+<h2>By {% include "user_inline_fragment.html" with user=object.author %}</h2>
 <h3>Date posted: {{ object.dateposted }} </h3>
 <div><i>Work summary:</i> {{ object.parent.worksummary }} </div>
 <hr>
