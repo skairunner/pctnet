@@ -1,0 +1,6 @@
+{% for comment in comments %}
+<div>
+  <i>{{ comment.dateposted }}</i>
+  <b><a href="{{ comment.author.get_absolute_url }}">{{ comment.author.userprofile.screenname }}</a> said:</b> {{ comment.commenttext | safe }}
+</div>
+{% endfor %}

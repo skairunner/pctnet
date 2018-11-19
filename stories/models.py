@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.template.defaultfilters import slugify
+from django.shortcuts import redirect
 
 
 class Story(models.Model):
@@ -27,6 +28,7 @@ class Story(models.Model):
 class Chapter(models.Model):
     parent = models.ForeignKey(Story, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # chapters may be rearranged
     chapterorder = models.IntegerField(default=0)
     dateposted = models.DateField()
     chaptertext = models.TextField()
@@ -44,3 +46,12 @@ class Chapter(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.chaptertitle)
         super(Chapter, self).save(*args, **kwargs)
+
+class Comment(models.Model):
+    parent = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    dateposted = models.DateTimeField()
+    commenttext = models.CharField(max_length=4250)
+
+    def get_absolute_url(self):
+        return f"{redirect(reverse('chapter-only-view', args=[self.parent.id]))}#{self.id}"
