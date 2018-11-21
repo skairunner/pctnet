@@ -83,7 +83,7 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
         # Empty field to prevent weirdness when convert to multichapter
         self.object.chaptersummary = ""
         story.worktitle = self.object.chaptertitle
-        self.object.chaptertitle = "" # same
+        self.object.chaptertitle = ""  # same
         # Commit to db
         story.save()
         self.object.parent = story
