@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from dj_commented_view import CommentPostMixin, CommentListMixin
 
 from datetime import datetime
@@ -126,3 +126,8 @@ class CommentDeleteView(DeleteView):
         self.object.isdeleted = True
         self.object.save()
         return HttpResponseRedirect(success_url)
+
+
+class CommentEditView(UpdateView):
+    model = Comment
+    fields = ['commenttext']

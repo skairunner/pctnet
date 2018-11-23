@@ -4,11 +4,12 @@
   {% include 'comment_content_fragment.html' with comment=comment %}
   {% if user.is_authenticated %}
     {% test_rule 'can_delete_comment' user comment as candelete %}
+    {% test_rule 'can_edit_comment' user comment as canedit %}
+    {% if canedit %}
+    <a href="{% url 'editcomment' pk=comment.pk %}"><button>edit</button></a>
+    {% endif %}
     {% if candelete %}
-    <form action="{% url 'deletecomment' pk=comment.pk %}">
-      {% csrf_token %}
-      <button type="submit">delete</button>
-    </form>
+    <a href="{% url 'deletecomment' pk=comment.pk %}"><button>delete</button></a>
     {% endif %}
   {% endif %}
 </div>

@@ -58,4 +58,4 @@ class Comment(models.Model):
         return 'c'
 
     def get_absolute_url(self):
-        return f"{redirect(reverse('chapter-only-view', args=[self.parent.id]))}#c{self.id}"
+        return f"{reverse('chapter-only-view', args=[self.parent.id])}#c{self.id}"

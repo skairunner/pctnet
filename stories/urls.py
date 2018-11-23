@@ -10,6 +10,7 @@ urlpatterns = [
     path('<int:storypk>/chapter/<int:chapterpk>/<str:slug>', v.ChapterDetailView.as_view(), name='viewchapter'),
     # Comments
     path('comment/<int:pk>/delete', v.CommentDeleteView.as_view(), name='deletecomment'),
+    path('comment/<int:pk>/edit', v.CommentEditView.as_view(), name='editcomment'),
     # Stories
     path('<int:pk>/', v.StoryRedirect),
     path('<int:pk>/<str:slug>/', v.StoryToChapterRedirect, name='viewstory'),
