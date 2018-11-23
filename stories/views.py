@@ -1,17 +1,33 @@
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import DateInput
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
+from dj_commented_view import CommentPostMixin, CommentListMixin
 
-from .models import Story, Chapter
+from datetime import datetime
+
+from .models import Story, Chapter, Comment
 
 
-class ChapterDetailView(DetailView):
+class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
     model = Chapter
+    commentmodel = Comment
+    parentfield = 'parent'
     pk_url_kwarg = 'chapterpk'
+    postcomment_fields = ['commenttext']
+
+    def get_comment_queryset(self):
+        queryset = super().get_comment_queryset()
+        return queryset.filter(isdeleted=False)
+
+    def post(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            raise PermissionDenied
+        return super().post(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         data = super(ChapterDetailView, self).get_context_data(**kwargs)
@@ -38,7 +54,13 @@ class ChapterDetailView(DetailView):
 
         return data
 
-
+    def postcomment_form_valid(self, form):
+        comment = form.save(commit=False)
+        setattr(comment, self.parentfield, self.object)
+        comment.dateposted = datetime.now()
+        comment.author = self.request.user
+        comment.save()
+        return HttpResponseRedirect(self.get_postcomment_success_url())
 
 # Non-slugged chapter to slugged chapter
 def ChapterRedirect(request, *args, **kwargs):
@@ -94,3 +116,13 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
 
         self.object = story # temporary while making new url
         return HttpResponseRedirect(self.get_success_url())
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.object.parent.get_absolute_url()
+        self.object.isdeleted = True
+        self.object.save()
+        return HttpResponseRedirect(success_url)

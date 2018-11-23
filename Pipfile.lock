@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3354a8814d14e30b286b910524635e05c79dd1fde5ffb807da5fc4c9220ea947"
+            "sha256": "0d7c497a2f5227e6939a426b8f4ab31ce41d57e4d28696a702a9298757a37e5b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,10 @@
         ]
     },
     "default": {
+        "dj-commented-view": {
+            "git": "https://github.com/skairunner/dj-commented-view.git",
+            "ref": "8d478ec99eedbde05079bd3b9a27b66796da749d"
+        },
         "dj-database-url": {
             "hashes": [
                 "sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163",

@@ -54,5 +54,8 @@ class Comment(models.Model):
     commenttext = models.CharField(max_length=4250)
     isdeleted = models.BooleanField(default=False)
 
+    def get_anchor_prefix(self):
+        return 'c'
+
     def get_absolute_url(self):
-        return f"{redirect(reverse('chapter-only-view', args=[self.parent.id]))}#{self.id}"
+        return f"{redirect(reverse('chapter-only-view', args=[self.parent.id]))}#c{self.id}"

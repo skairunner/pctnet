@@ -1,0 +1,4 @@
+<div id="{{ comment.get_anchor_prefix }}{{ comment.id }}">
+  <i>{{ comment.dateposted }}</i>
+  <b>{% include "user_inline_fragment.html" with user=comment.author %} said:</b> {{ comment.commenttext | safe }}
+</div>

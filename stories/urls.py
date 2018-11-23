@@ -1,15 +1,17 @@
 from django.urls import path
 
-from .views import ChapterDetailView, ChapterRedirect, StoryRedirect, StorySubmitView, StoryToChapterRedirect
+from . import views as v
 
 
 urlpatterns = [
     # Chapters first due to URL routing
-    path('chapter/<int:chapterpk>', ChapterRedirect, name='chapter-only-view'),
-    path('<int:storypk>/chapter/<int:chapterpk>', ChapterRedirect),
-    path('<int:storypk>/chapter/<int:chapterpk>/<str:slug>', ChapterDetailView.as_view(), name='viewchapter'),
+    path('chapter/<int:chapterpk>', v.ChapterRedirect, name='chapter-only-view'),
+    path('<int:storypk>/chapter/<int:chapterpk>', v.ChapterRedirect),
+    path('<int:storypk>/chapter/<int:chapterpk>/<str:slug>', v.ChapterDetailView.as_view(), name='viewchapter'),
+    # Comments
+    path('comment/<int:pk>/delete', v.CommentDeleteView.as_view(), name='deletecomment'),
     # Stories
-    path('<int:pk>/', StoryRedirect),
-    path('<int:pk>/<str:slug>/', StoryToChapterRedirect, name='viewstory'),
-    path('submit/', StorySubmitView.as_view(), name='submitstory'),
+    path('<int:pk>/', v.StoryRedirect),
+    path('<int:pk>/<str:slug>/', v.StoryToChapterRedirect, name='viewstory'),
+    path('submit/', v.StorySubmitView.as_view(), name='submitstory'),
 ]

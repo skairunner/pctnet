@@ -24,7 +24,18 @@
 <div>{{ object.chaptertext |safe }}</div>
 <hr>
 <div id="comments">
-  {% include "comment_fragment.html" with comments=object.comment_set.all %}
+  {% for comment in comment_list %}
+  {% include "comment_fragment.html" with comment=comment %}
+  {% endfor %}
 </div>
+{% if user.is_authenticated %}
+<div>
+  <form action="{{ request.path }}" method="POST">
+    {% csrf_token %}
+    {{ postcomment_form }}
+    <input type="submit" value="Submit">
+  </form>
+</div>
+{% endif %}
 {% endblock %}
 

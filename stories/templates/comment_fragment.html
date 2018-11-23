@@ -1,17 +1,14 @@
 {% load rules %}
 
-{% for comment in comments %}
 <div>
-  <i>{{ comment.dateposted }}</i>
-  <b>{% include "user_inline_fragment.html" with user=comment.author %} said:</b> {{ comment.commenttext | safe }}
+  {% include 'comment_content_fragment.html' with comment=comment %}
   {% if user.is_authenticated %}
     {% test_rule 'can_delete_comment' user comment as candelete %}
     {% if candelete %}
-    <form action="% url 'delete_comment' pk=comment.pk %">
+    <form action="{% url 'deletecomment' pk=comment.pk %}">
       {% csrf_token %}
       <button type="submit">delete</button>
     </form>
     {% endif %}
   {% endif %}
 </div>
-{% endfor %}
