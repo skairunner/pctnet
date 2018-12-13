@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 class Group(models.Model):
     groupname = models.CharField(unique=True, max_length=255)
     slug = models.SlugField(default='')
-    members = models.ManyToManyField(User)
-    founder = models.ForeignKey(User, on_delete=models.CASCADE)
-    admins = models.ManyToManyField(User)
-    mods = models.ManyToManyField(User)
+    members = models.ManyToManyField(User, related_name='memberof')
+    founder = models.ForeignKey(User, related_name='founded', on_delete=models.CASCADE)
+    admins = models.ManyToManyField(User, related_name='adminof')
+    mods = models.ManyToManyField(User, related_name='modof')
     group_page = models.TextField(default='')
 
 
