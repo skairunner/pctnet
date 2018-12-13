@@ -41,6 +41,15 @@ class GroupForumThread(models.Model):
     dateposted = models.DateTimeField()
     slug = models.SlugField(default='')
 
+    def get_absolute_url(self):
+        slug = f'{self.forum.group.slug}.{self.slug}'
+        return reverse('viewthread', args=[
+            self.forum.group.id,
+            self.id,
+            slug
+        ])
+
+
 class GroupForumThreadPost(models.Model):
     thread = models.ForeignKey(GroupForumThread, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)

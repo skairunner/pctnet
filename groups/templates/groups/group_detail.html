@@ -3,6 +3,7 @@
 {% block content %}
 <h1>{{ object.groupname }}</h1>
 <div>{{ object.grouppage |safe }}</div>
+  <a href='{% url "forum" object.pk object.slug %}'>Forum</a>
 <hr>
 <div class='comments'>
   {% for comment in comment_list %}

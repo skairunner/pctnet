@@ -1,16 +1,18 @@
+from django import forms
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
 from django.urls import reverse
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, FormView
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 
 from datetime import datetime
 from dj_commented_view import CommentPostMixin, CommentListMixin
 
-from .models import Group, GroupComment
+from .models import Group, GroupComment, GroupForum, GroupForumThread, GroupForumThreadPost
 
 
 def redirectGroup(request, pk):
@@ -29,10 +31,14 @@ class CreateGroupView(LoginRequiredMixin, CreateView):
         obj.slug = slugify(obj.groupname)
         obj.save()
         self.object = obj
+        # Create forum
+        forum = GroupForum(group=obj)
+        forum.save()
+        # Finish setting up group
         obj.admins.add(self.request.user)
         obj.members.add(self.request.user)
         obj.save()
-        return self.get_success_url()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class GroupHomepageView(CommentPostMixin, CommentListMixin, DetailView):
@@ -57,3 +63,93 @@ class GroupHomepageView(CommentPostMixin, CommentListMixin, DetailView):
         comment.author = self.request.user
         comment.save()
         return HttpResponseRedirect(self.get_postcomment_success_url())
+
+
+def redirectForum(request, grouppk):
+    group = get_object_or_404(Group, id=grouppk)
+    url = reverse('forum', args=[pk, group.slug])
+    return HttpResponseRedirect(url)
+
+
+class GroupForumView(ListView):
+    model = GroupForumThread
+    template_name = 'groups/forum.html'
+    group = None
+
+    def get_queryset(self):
+        group = self.get_group()
+        forum = group.groupforum_set.all()[0]
+        qs = GroupForumThread.objects.filter(forum=forum).all()
+        return qs
+
+    def get_group(self):
+        if self.group:
+            return self.group
+        self.group = Group.objects.get(id=self.kwargs['grouppk'])
+        return self.group
+
+    def get_context_data(self, **kwargs):
+        kwargs['group'] = self.get_group()
+
+
+def redirectNewThread(request, grouppk):
+    group = Group.objects.get(id=grouppk)
+    url = reverse('newthread', args=[group.id, group.slug])
+    return HttpResponseRedirect(url)
+
+
+class NewThreadForm(forms.Form):
+    threadname = forms.CharField(max_length=255)
+    postcontent = forms.CharField()
+
+
+class GroupThreadCreate(LoginRequiredMixin, FormView):
+    template_name = 'groups/thread-create.html'
+    form_class = NewThreadForm
+
+    def get_forum(self):
+        group = Group.objects.get(id=self.kwargs['grouppk'])
+        return group.groupforum_set.all()[0]
+
+    def form_valid(self, form):
+        threadname = form.cleaned_data['threadname']
+        now = datetime.now()
+        thread = GroupForumThread(
+            forum=self.get_forum(),
+            author=self.request.user,
+            dateposted=now,
+            threadname=threadname,
+            slug=slugify(threadname))
+        thread.save()
+        self.object = thread
+        post = GroupForumThreadPost(
+            thread=thread,
+            author=self.request.user,
+            postcontent=form.cleaned_data['postcontent'],
+            dateposted=now)
+        post.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+def redirectViewThread(request, *args, **kwargs):
+    thread = GroupForumThread.objects.get(id=kwargs['threadpk'])
+    return HttpResponseRedirect(thread.get_absolute_url())
+
+
+class ThreadView(ListView):
+    model = GroupForumThreadPost
+    template_name = 'groups/thread-view.html'
+    thread = None
+
+    def get_thread(self):
+        if not self.thread:
+            self.thread = GroupForumThread.objects.get(id=self.kwargs['threadpk'])
+        return self.thread
+
+    def get_queryset(self):
+        thread = self.get_thread()
+        return GroupForumThreadPost.objects.filter(thread=thread.id).all()
+
+    def get_context_data(self, **kwargs):
+        kwargs['thread'] = self.get_thread()
+        return super().get_context_data(**kwargs)

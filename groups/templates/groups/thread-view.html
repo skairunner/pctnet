@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Topic: {{ thread.threadname }}</h2>
+<hr>
+{% for post in object_list %}
+<div id='post{{ post.pk }}'>
+  <div>{% include "user_inline_fragment.html" with user=post.author %} posted at {{ post.dateposted }}</div>
+  <div>{{ post.postcontent|safe }}</div>
+  <hr>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ thread.forum.group }} forum </h1>
+{% for thread in object_list %}
+  <div class='thread'>
+    <a href=''><span class='topic'>{{ thread.threadname }}</span></a>
+    posted by
+    {% include "user_inline_fragment.html" with user=thread.author %}
+    at
+    {{ thread.dateposted }}
+  </div>
+  <hr>
+{% endfor %}
+{% endblock %}
