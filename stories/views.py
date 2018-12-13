@@ -126,6 +126,35 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+class ChapterSubmitView(CreateView):
+    model = Chapter
+    fields = ['dateposted', 'chaptertitle', 'chaptersummary', 'chaptertext']
+    template_name = 'stories/chapter_new.html'
+    story = None
+
+    def get_story(self):
+        if not self.story:
+            self.story = Story.objects.get(id=self.kwargs['pk'])
+        return self.story
+
+    def get_context_data(self, **kwargs):
+        s = self.get_story()
+        buttons = getEditNavButtons(s, s.chapter_set.order_by('chapterorder').all(), -2)
+        kwargs['buttons'] = buttons
+        kwargs['story'] = s
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        chapter = form.save(commit=False)
+        story = self.get_story()
+        chapter.author = self.request.user
+        chapter.parent = story
+        chapter.chapterorder = story.chapter_set.order_by('-chapterorder').first().chapterorder + 1
+        chapter.save()
+        self.object = chapter
+        return HttpResponseRedirect(self.get_success_url())
+
+
 # Mark current chapter as True. Otherwise, mark Story as true
 def getEditNavButtons(story, chapters, current=-1):
     buttons = [(c.chapterorder + 1, reverse('editchapter', args=[c.id]), True if current == c.chapterorder else False) for c in chapters]
@@ -150,7 +179,7 @@ class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     fields = ['chaptertitle', 'chaptersummary', 'chaptertext', 'dateposted']
     pk_url_kwarg = 'chapterpk'
     template_name = 'stories/chapter_edit.html'
-    permission_required = 'stories.change_story'
+    permission_required = 'stories.change_chapter'
 
     def get_context_data(self, **kwargs):
         kwargs['story'] = self.object.parent

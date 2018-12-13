@@ -7,6 +7,11 @@ def can_edit_story(user, story):
 
 
 @rules.predicate
+def can_edit_chapter(user, chapter):
+    return can_edit_story(user, chapter.parent)
+
+
+@rules.predicate
 def can_delete_story(user, story):
     return story.owner.pk == user.pk
 
@@ -23,6 +28,7 @@ def can_delete_comment(user, comment):
 
 rules.add_rule('can_edit_comment', can_edit_comment)
 rules.add_rule('can_delete_comment', can_delete_comment)
+rules.add_perm('stories.change_chapter', can_edit_chapter)
 rules.add_perm('stories.change_story', can_edit_story)
 rules.add_perm('comment.change_comment', can_edit_comment)
 
