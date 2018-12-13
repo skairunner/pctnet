@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% load rules %}
 
 {% block content %}
 <h1>{{ object.groupname }}</h1>
+{% test_rule 'can_edit_grouppage' user object as canedit %}
+{% if canedit %}
+<a href='{% url "editgroup" group.pk %}'>Edit homepage</a>
+{% endif %}
 <div>{{ object.grouppage |safe }}</div>
   <a href='{% url "forum" object.pk object.slug %}'>Forum</a>
 <hr>

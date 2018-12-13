@@ -11,6 +11,7 @@ from django.views.generic.list import ListView
 
 from datetime import datetime
 from dj_commented_view import CommentPostMixin, CommentListMixin
+import rules
 
 from .models import Group, GroupComment, GroupForum, GroupForumThread, GroupForumThreadPost
 
@@ -39,6 +40,18 @@ class CreateGroupView(LoginRequiredMixin, CreateView):
         obj.members.add(self.request.user)
         obj.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class GroupHomepageEdit(LoginRequiredMixin, UpdateView):
+    model = Group
+    fields = ['grouppage']
+    template_name = 'groups/group-edit.html'
+
+    # Bounce if not allowed
+    def dispatch(self, request, *args, **kwargs):
+        if not rules.test_rule('can_edit_grouppage', request.user, self.get_object()):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
 
 class GroupHomepageView(CommentPostMixin, CommentListMixin, DetailView):

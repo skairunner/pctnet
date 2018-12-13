@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Editing group '{{ object.groupname }}'</h1>
+<form method='post' action=''>
+  {% csrf_token %}
+  {{ form }}
+  <input type='submit' value='Update homepage'>
+</form>
+{% endblock %}
