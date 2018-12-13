@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="navigation">
+<nav class="navigation">
   {% if previous_chapter %}
   <a href="{{ previous_chapter }}"><button>Previous Chapter</button></a>
   {% endif %}
   {% if next_chapter %}
   <a href="{{ next_chapter }}"><button>Next Chapter</button></a>
   {% endif %}
+  {% ifnotequal chapterlist|length 0 %}
   <select id="chapterlist">
     {% for i, chapterid, title in chapter_list %}
     <option value="{{ chapterid }}" {% if this_chapter == chapterid %} selected="selected" {% endif %}> {{ i }}. {{ title }} </option>
     {% endfor %}
   </select>
-</div>
+  {% endifnotequal %}
+</nav>
 <h1>{{ object.parent.worktitle }}</h1>
 <h2>By {% include "user_inline_fragment.html" with user=object.author %}</h2>
 <h3>Date posted: {{ object.dateposted }} </h3>
