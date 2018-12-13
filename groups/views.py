@@ -136,10 +136,16 @@ def redirectViewThread(request, *args, **kwargs):
     return HttpResponseRedirect(thread.get_absolute_url())
 
 
-class ThreadView(ListView):
+class ThreadView(CommentPostMixin, ListView):
     model = GroupForumThreadPost
     template_name = 'groups/thread-view.html'
     thread = None
+    commentmodel = GroupForumThreadPost
+    postcomment_fields = ['postcontent']
+    parentfield = 'thread'
+
+    def get_object(self):
+        return GroupForumThreadPost()
 
     def get_thread(self):
         if not self.thread:
@@ -148,8 +154,20 @@ class ThreadView(ListView):
 
     def get_queryset(self):
         thread = self.get_thread()
-        return GroupForumThreadPost.objects.filter(thread=thread.id).all()
+        return GroupForumThreadPost \
+            .objects \
+            .filter(thread=thread.id) \
+            .order_by('dateposted') \
+            .all()
 
     def get_context_data(self, **kwargs):
         kwargs['thread'] = self.get_thread()
         return super().get_context_data(**kwargs)
+
+    def postcomment_form_valid(self, form):
+        post = form.save(commit=False)
+        post.author = self.request.user
+        post.dateposted = datetime.now()
+        post.thread = self.get_thread()
+        post.save()
+        return HttpResponseRedirect(post.get_absolute_url())

@@ -10,4 +10,13 @@
   <hr>
 </div>
 {% endfor %}
+{% if user.is_authenticated %}
+<div>
+  <form action='{{ request.path }}' method='POST'>
+    {% csrf_token %}
+    {{ postcomment_form }}
+  <input type='submit' value='Submit'>
+  </form>
+</div>
+{% endif %}
 {% endblock %}

@@ -55,3 +55,6 @@ class GroupForumThreadPost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     postcontent = models.TextField()
     dateposted = models.DateTimeField()
+
+    def get_absolute_url(self):
+        return f'{self.thread.get_absolute_url()}#post{self.id}'
