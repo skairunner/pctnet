@@ -44,7 +44,3 @@ class SignupView(FormView):
     template_name = "login/registration.html"
     form_class = UserProfileForm
     success_url = reverse_lazy('login')
-
-    def form_valid(self, form):
-
-        return super().form_valid(form)
