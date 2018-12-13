@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.forms import DateInput
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -12,13 +13,17 @@ from rules.contrib.views import PermissionRequiredMixin
 from .models import UserProfile
 
 
+def redirectFullUserPath(userid):
+    user = get_object_or_404(User, id=userid)
+    return HttpResponseRedirect(user.userprofile.get_full_url())
+
+
 class UserProfileView(DetailView):
     model = UserProfile
 
 
 def UserRedirect(request, *args, **kwargs):
-    obj = get_object_or_404(UserProfile, pk=kwargs["pk"])
-    return HttpResponseRedirect(reverse("viewuser", args=[obj.pk, obj.slug]))
+    return redirectFullUserPath(kwargs['pk'])
 
 
 class ProfileUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):

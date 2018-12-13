@@ -1,7 +1,6 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.urls import reverse
 from django.conf import settings
+from django.db import models
+from django.urls import reverse
 
 
 class UserProfile(models.Model):
@@ -10,5 +9,8 @@ class UserProfile(models.Model):
     slug = models.SlugField(default="")
     bio = models.TextField(default="")
 
+    def get_full_url(self):
+        return reverse('viewuser', args=[self.pk, self.slug])
+
     def get_absolute_url(self):
-        return reverse("viewuser", args=[self.user.id, self.slug])
+        return self.get_full_url()
