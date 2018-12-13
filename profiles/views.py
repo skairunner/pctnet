@@ -18,6 +18,11 @@ def redirectFullUserPath(userid):
     return HttpResponseRedirect(user.userprofile.get_full_url())
 
 
+@login_required
+def CurrentUserRedirect(request):
+    return redirectFullUserPath(request.user.id)
+
+
 class UserProfileView(DetailView):
     model = UserProfile
 
@@ -31,7 +36,3 @@ class ProfileUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView)
     model = UserProfile
     permission_required = 'profiles.change_profile'
     template_name = "profiles/profile_update.html"
-
-
-def current_user(request):
-    return HttpResponse("<html><body><p>%s</p></body></html>" % (request.user.pk,))
