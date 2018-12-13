@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Group(models.Model):
@@ -9,7 +10,10 @@ class Group(models.Model):
     founder = models.ForeignKey(User, related_name='founded', on_delete=models.CASCADE)
     admins = models.ManyToManyField(User, related_name='adminof')
     mods = models.ManyToManyField(User, related_name='modof')
-    group_page = models.TextField(default='')
+    grouppage = models.TextField(default='')
+
+    def get_absolute_url(self):
+        return reverse('group-homepage', args=[self.id, self.slug])
 
 
 class GroupComment(models.Model):
