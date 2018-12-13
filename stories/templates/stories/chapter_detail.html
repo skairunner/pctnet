@@ -8,13 +8,13 @@
   {% if next_chapter %}
   <a href="{{ next_chapter }}"><button>Next Chapter</button></a>
   {% endif %}
-  {% ifnotequal chapterlist|length 0 %}
+  {% if chapter_list|length > 1 %}
   <select id="chapterlist">
     {% for i, chapterid, title in chapter_list %}
     <option value="{{ chapterid }}" {% if this_chapter == chapterid %} selected="selected" {% endif %}> {{ i }}. {{ title }} </option>
     {% endfor %}
   </select>
-  {% endifnotequal %}
+  {% endif %}
 </nav>
 <h1>{{ object.parent.worktitle }}</h1>
 <h2>By {% include "user_inline_fragment.html" with user=object.author %}</h2>
