@@ -67,7 +67,7 @@ class GroupHomepageView(CommentPostMixin, CommentListMixin, DetailView):
 
 def redirectForum(request, grouppk):
     group = get_object_or_404(Group, id=grouppk)
-    url = reverse('forum', args=[pk, group.slug])
+    url = reverse('forum', args=[grouppk, group.slug])
     return HttpResponseRedirect(url)
 
 
