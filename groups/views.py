@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
 from django.urls import reverse
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
@@ -172,3 +172,14 @@ class ThreadView(CommentPostMixin, ListView):
         post.thread = self.get_thread()
         post.save()
         return HttpResponseRedirect(post.get_absolute_url())
+
+
+def redirectPost(request, *args, **kwargs):
+    post = GroupForumThreadPost.objects.get(id=kwargs['pk'])
+    return HttpResponseRedirect(post.get_absolute_url())
+
+
+class EditPostView(UpdateView):
+    model = GroupForumThreadPost
+    template_name = 'groups/post-edit.html'
+    fields = ['postcontent']

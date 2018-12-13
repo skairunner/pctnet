@@ -11,6 +11,8 @@ urlpatterns = [
     path('<int:grouppk>/<slug:slug>/forum/new', v.GroupThreadCreate.as_view(), name='newthread'),
     path('<int:grouppk>/forum/<int:threadpk>', v.redirectViewThread),
     path('<int:grouppk>/forum/<int:threadpk>/<str:slug>', v.ThreadView.as_view(), name='viewthread'),
+    path('post/<int:pk>', v.redirectPost),
+    path('post/<int:pk>/edit', v.EditPostView.as_view(), name='editpost'),
     # Group
     path('create', v.CreateGroupView.as_view(), name='makegroup'),
     path('<int:pk>/', v.redirectGroup),
