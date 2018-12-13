@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from stories.models import Story
 
 
 class Group(models.Model):
@@ -16,11 +17,17 @@ class Group(models.Model):
         return reverse('group-homepage', args=[self.id, self.slug])
 
 
+class GroupFolders(models.Model):
+    parent = models.ForeignKey(Group, on_delete=models.CASCADE)
+    stories = models.ManyToManyField(Story, related_name='infolder')
+
+
 class GroupComment(models.Model):
     parent = models.ForeignKey(Group, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     dateposted = models.DateTimeField()
     commenttext = models.CharField(max_length=4250)
+    isdeleted = models.BooleanField(default=False)
 
 
 class GroupForum(models.Model):

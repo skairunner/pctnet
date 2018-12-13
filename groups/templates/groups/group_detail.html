@@ -3,4 +3,17 @@
 {% block content %}
 <h1>{{ object.groupname }}</h1>
 <div>{{ object.grouppage |safe }}</div>
+<hr>
+<div class='comments'>
+  {% include "comment_fragment.html" with comments=comment_list %}
+</div>
+{% if user.is_authenticated %}
+<div>
+  <form action='{{ request.path }}' method='POST'>
+    {% csrf_token %}
+    {{ postcomment_form }}
+  <input type='submit' value='Submit'>
+  </form>
+</div>
+{% endif %}
 {% endblock %}
