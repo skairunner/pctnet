@@ -5,7 +5,9 @@
 <div>{{ object.grouppage |safe }}</div>
 <hr>
 <div class='comments'>
-  {% include "comment_fragment.html" with comments=comment_list %}
+  {% for comment in comment_list %}
+    {% include "comment_fragment.html" with comment=comment %}
+  {% endfor %}
 </div>
 {% if user.is_authenticated %}
 <div>
