@@ -37,6 +37,7 @@ DATABASES['default'] = dj_database_url.config()
 # Application definition
 
 INSTALLED_APPS = [
+    'groups.apps.GroupsConfig',
     'rules.apps.AutodiscoverRulesConfig',
     'profiles.apps.ProfilesConfig',
     'stories.apps.StoriesConfig',

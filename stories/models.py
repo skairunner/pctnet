@@ -47,6 +47,7 @@ class Chapter(models.Model):
         self.slug = slugify(self.chaptertitle)
         super(Chapter, self).save(*args, **kwargs)
 
+
 class Comment(models.Model):
     parent = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)

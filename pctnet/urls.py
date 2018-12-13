@@ -21,4 +21,5 @@ urlpatterns = [
     path('login/', include('login.urls')),
     path('stories/', include('stories.urls')),
     path('user/', include('profiles.urls')),
+    path('group/', include('groups.urls'))
 ]
