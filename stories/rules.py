@@ -3,12 +3,12 @@ import rules
 
 @rules.predicate
 def can_edit_story(user, story):
-    return  story.author.pk == user.pk
+    return story.owner.pk == user.pk
 
 
 @rules.predicate
 def can_delete_story(user, story):
-    return story.author.pk == user.pk
+    return story.owner.pk == user.pk
 
 
 @rules.predicate

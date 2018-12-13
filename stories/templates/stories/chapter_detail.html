@@ -3,7 +3,7 @@
 
 {% block content %}
 <nav class="navigation">
-  {% has_perm 'stories.change_story' user object as canedit %}
+  {% has_perm 'stories.change_story' user object.parent as canedit %}
   {% if canedit %}
   <a href='{% url "editchapter" object.id %}'><button>Edit chapter</button></a>
   {% endif %}
