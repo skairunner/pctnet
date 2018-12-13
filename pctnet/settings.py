@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rules.apps.AutodiscoverRulesConfig',
     'profiles.apps.ProfilesConfig',
     'stories.apps.StoriesConfig',
-    'templates.apps.TemplatesConfig',
     'login.apps.LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,7 +65,7 @@ ROOT_URLCONF = 'pctnet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
