@@ -1,5 +1,5 @@
 <div class='story-overview'>
-    <div><strong>{{ story.worktitle }}</strong></div>
+    <div><a href='{{ story.get_absolute_url }}'><strong>{{ story.worktitle }}</strong></a></div>
     <div>By {% include "user_inline_fragment.html" with user=story.owner %}</div>
     <div>Chapters: {{ story.chapter_set.count }}</div>
     <div>{{ story.worksummary }}</div>
