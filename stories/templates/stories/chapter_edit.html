@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "stories/edit_navbar_fragment.html" with buttons=buttons %}
+<form method='POST'>
+  {% csrf_token %}
+  {{ form }}
+  <input type='submit' value='Finish editing'>
+</form>
+{% endblock %}

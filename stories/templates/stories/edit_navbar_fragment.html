@@ -1,0 +1,9 @@
+<nav>
+{% for i, link, current in buttons %}
+  {% if current %}
+  <span>{{ i }}</span>
+  {% else %}
+  <a href='{{ link }}'>{{ i }}</a>
+  {% endif %}
+{% endfor %}
+</nav>

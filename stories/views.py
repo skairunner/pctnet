@@ -8,6 +8,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from dj_commented_view import CommentPostMixin, CommentListMixin
+import rules
+from rules.contrib.views import PermissionRequiredMixin
 
 from datetime import datetime
 
@@ -122,6 +124,39 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
 
         self.object = story # temporary while making new url
         return HttpResponseRedirect(self.get_success_url())
+
+
+# Mark current chapter as True. Otherwise, mark Story as true
+def getEditNavButtons(story, chapters, current=-1):
+    buttons = [(c.chapterorder + 1, reverse('editchapter', args=[c.id]), True if current == c.chapterorder else False) for c in chapters]
+    buttons.insert(0, ('Story', reverse('editstory', args=[story.id]), True if current == -1 else False))
+    return buttons
+
+
+class StoryEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Story
+    fields = ['worktitle', 'worksummary']
+    template_name = 'stories/story_edit.html'
+    permission_required = 'stories.change_story'
+
+    def get_context_data(self, **kwargs):
+        chapters = self.get_object().chapter_set.all().order_by('chapterorder').all()
+        kwargs['buttons'] = getEditNavButtons(self.object, chapters)
+        return super().get_context_data(**kwargs)
+
+
+class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Chapter
+    fields = ['chaptertitle', 'chaptersummary', 'chaptertext', 'dateposted']
+    pk_url_kwarg = 'chapterpk'
+    template_name = 'stories/chapter_edit.html'
+    permission_required = 'stories.change_story'
+
+    def get_context_data(self, **kwargs):
+        kwargs['story'] = self.object.parent
+        kwargs['chapters'] = self.object.parent.chapter_set.all().order_by('chapterorder').all()
+        kwargs['buttons'] = getEditNavButtons(self.object.parent, kwargs['chapters'], self.object.chapterorder)
+        return super().get_context_data(**kwargs)
 
 
 class CommentDeleteView(DeleteView):
