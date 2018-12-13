@@ -92,7 +92,7 @@ def StoryToChapterRedirect(request, *args, **kwargs):
 
 class StorySubmitView(LoginRequiredMixin, CreateView):
     fields = ["chaptertitle", "dateposted", "chaptertext"]
-    model = Chapter # easier to backfill Story from Chapter
+    model = Chapter  # easier to backfill Story from Chapter
     template_name = "stories/story_submit.html"
 
     def get_form(self, form_class=None):
@@ -117,11 +117,12 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
         self.object.parent = story
         self.object.save()
         # Set first chapter!
-        story.firstchapter = self.object
+        story.firstchapter_id = self.object.id
         story.save()
 
         self.object = story # temporary while making new url
         return HttpResponseRedirect(self.get_success_url())
+
 
 class CommentDeleteView(DeleteView):
     model = Comment
