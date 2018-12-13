@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ thread.forum.group }} forum </h1>
+<h1>{{ group.groupname }} forum </h1>
+<hr>
 {% for thread in object_list %}
   <div class='thread'>
-    <a href=''><span class='topic'>{{ thread.threadname }}</span></a>
+    <a href='{% url "viewthread" group.pk thread.pk thread.slug %}'>
+      <span class='topic'>{{ thread.threadname }}</span>
+    </a>
     posted by
     {% include "user_inline_fragment.html" with user=thread.author %}
     at
