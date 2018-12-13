@@ -15,4 +15,5 @@ urlpatterns = [
     path('<int:pk>/', v.StoryRedirect),
     path('<int:pk>/<str:slug>/', v.StoryToChapterRedirect, name='viewstory'),
     path('submit/', v.StorySubmitView.as_view(), name='submitstory'),
+    path('', v.StoryIndexView.as_view(), name='storyindex'),
 ]

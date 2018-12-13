@@ -1,0 +1,8 @@
+<div class='story-overview'>
+    <div><strong>{{ story.worktitle }}</strong></div>
+    <div>By {% include "user_inline_fragment.html" with user=story.owner %}</div>
+    <div>Chapters: {{ story.chapter_set.count }}</div>
+    <div>{{ story.worksummary }}</div>
+    <div>Posted on {{ story.datefirstposted }}</div>
+    <div>Last updated on {{story.datelastposted }}</div>
+</div>

@@ -6,11 +6,17 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
 from dj_commented_view import CommentPostMixin, CommentListMixin
 
 from datetime import datetime
 
 from .models import Story, Chapter, Comment
+
+
+class StoryIndexView(ListView):
+    model = Story
+    template_name = 'stories/story-index.html'
 
 
 class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
