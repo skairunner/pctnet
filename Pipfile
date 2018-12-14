@@ -5,6 +5,8 @@ verify_ssl = true
 
 [dev-packages]
 coverage = "*"
+django-dynamic-fixture = "*"
+django-webtest = "*"
 
 [packages]
 dj-database-url = "*"

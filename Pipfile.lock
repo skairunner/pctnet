@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "470a476506952a75f365c3e1cb154d77a41f2f2f120dff6f5391d06618262b10"
+            "sha256": "44c480ae238509770092ba03d0cc7b43559461b63a732000fec347e4ff4d800c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -120,6 +120,14 @@
         }
     },
     "develop": {
+        "beautifulsoup4": {
+            "hashes": [
+                "sha256:194ec62a25438adcb3fdb06378b26559eda1ea8a747367d34c33cef9c7f48d57",
+                "sha256:90f8e61121d6ae58362ce3bed8cd997efb00c914eae0ff3d363c32f9a9822d10",
+                "sha256:f0abd31228055d698bb392a826528ea08ebb9959e6bea17c606fd9c9009db938"
+            ],
+            "version": "==4.6.3"
+        },
         "coverage": {
             "hashes": [
                 "sha256:09e47c529ff77bf042ecfe858fb55c3e3eb97aac2c87f0349ab5a7efd6b3939f",
@@ -156,6 +164,49 @@
             ],
             "index": "pypi",
             "version": "==4.5.2"
+        },
+        "django-dynamic-fixture": {
+            "hashes": [
+                "sha256:f8f44d8276fddb8a89a48c623fbf11d49e912e44cdee66785b7da85731f840aa"
+            ],
+            "index": "pypi",
+            "version": "==2.0.0"
+        },
+        "django-webtest": {
+            "hashes": [
+                "sha256:7b683d87cd9be13599af44b81bd44f97b49978b4e69cf4b92059c393f64307c1",
+                "sha256:f3cd35d06ec01610e1a5ec8917679ad9a53f815d85d1e41e385746f1e823869d"
+            ],
+            "index": "pypi",
+            "version": "==1.9.4"
+        },
+        "six": {
+            "hashes": [
+                "sha256:3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c",
+                "sha256:d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
+            ],
+            "version": "==1.12.0"
+        },
+        "waitress": {
+            "hashes": [
+                "sha256:40b0f297a7f3af61fbfbdc67e59090c70dc150a1601c39ecc9f5f1d283fb931b",
+                "sha256:d33cd3d62426c0f1b3cd84ee3d65779c7003aae3fc060dee60524d10a57f05a9"
+            ],
+            "version": "==1.1.0"
+        },
+        "webob": {
+            "hashes": [
+                "sha256:a48315158db05df0c47fbdd061b57ba0ba85bdd0b6ea9dca87511b4b7c798e99",
+                "sha256:fc8c466af474e2e2775f1aef7afb902ed8b82e597eb0b13624818a34e8bfe720"
+            ],
+            "version": "==1.8.4"
+        },
+        "webtest": {
+            "hashes": [
+                "sha256:4221020d502ff414c5fba83c1213985b83219cb1cc611fe58aa4feaf96b5e062",
+                "sha256:9f1e6faad0b732911793e4d6f54aede292b0c3ee0b3ef7afb2011ec4f4044cc8"
+            ],
+            "version": "==2.0.32"
         }
     }
 }
