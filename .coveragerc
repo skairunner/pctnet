@@ -1,0 +1,10 @@
+[run]
+source = .
+omit =
+	*/migrations/*
+	*/admin.py
+	*/tests.py
+	*/urls.py
+	*/apps.py
+	manage.py
+	pctnet/*
