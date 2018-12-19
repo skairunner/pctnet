@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>{{ object.screenname }}</h1>
-<div><i>Bio:</i> {{ object.bio |safe }} </div>
+<div class='bio'><i>Bio:</i> <span class='bio-content'>{{ object.bio |safe }}</span></div>
 {% if user.id == object.user.id %}
 <div><a href="{% url "updatebio" user.id %}">Edit</a></div>
 {% endif %}
