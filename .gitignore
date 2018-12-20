@@ -1,3 +1,7 @@
+# Ignore migrations until stable version released
+**/migrations/*
+!**/migrations/__init__.py
+
 # Swap files
 *.swp
 
