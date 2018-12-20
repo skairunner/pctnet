@@ -73,8 +73,7 @@ class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
 # Non-slugged chapter to slugged chapter
 def ChapterRedirect(request, *args, **kwargs):
     obj = get_object_or_404(Chapter, pk=kwargs["chapterpk"])
-    slug = f"{obj.parent.slug}.{obj.slug}"
-    return HttpResponseRedirect(reverse("viewchapter", args=[obj.parent.pk, obj.pk, slug]))
+    return HttpResponseRedirect(obj.get_absolute_url())
 
 
 # Redirects non-slugged story to slugged story

@@ -40,8 +40,9 @@ class Chapter(models.Model):
         return f"[Chapter: {self.parent.worktitle}--{self.chaptertitle}]"
 
     def get_absolute_url(self):
-        return reverse("chapter-only-view",
-                       args=[self.id])
+        slug = f'{self.parent.slug}.{self.slug}'
+        return reverse('viewchapter',
+                       args=[self.parent.pk, self.pk, slug])
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.chaptertitle)
