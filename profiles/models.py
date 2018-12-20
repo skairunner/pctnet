@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 
 class UserProfile(models.Model):
@@ -14,3 +15,8 @@ class UserProfile(models.Model):
 
     def get_absolute_url(self):
         return self.get_full_url()
+
+    def save(self):
+        if self.slug == '':
+            self.slug = slugify(self.screenname)
+        super().save()
