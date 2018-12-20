@@ -24,11 +24,11 @@
 <h1>{{ object.parent.worktitle }}</h1>
 <h2>By {% include "user_inline_fragment.html" with user=object.author %}</h2>
 <h3>Date posted: {{ object.dateposted }} </h3>
-<div><i>Work summary:</i> {{ object.parent.worksummary }} </div>
+<div class='worksummary'><i>Work summary:</i> <span class='worksummary-content'>{{ object.parent.worksummary }}</span></div>
 <hr>
-<div><i>Chapter summary:</i> {{ object.chaptersummary |safe }} </div>
+<div class='chaptersummary'><i>Chapter summary:</i> <span class='chaptersummary-content'>{{ object.chaptersummary |safe }}</span></div>
 <hr>
-<div>{{ object.chaptertext |safe }}</div>
+<div class='chaptertext'>{{ object.chaptertext |safe }}</div>
 <hr>
 <div id="comments">
   {% for comment in comment_list %}
