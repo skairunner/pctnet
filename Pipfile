@@ -21,7 +21,7 @@ rules = "*"
 Django = "*"
 dj-commented-view = {git = "https://github.com/skairunner/dj-commented-view.git"}
 bleach = "*"
-markdown = "*"
+mistletoe = "*"
 
 [requires]
 python_version = "3.6"

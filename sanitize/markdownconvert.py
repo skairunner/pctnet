@@ -1,5 +1,5 @@
-from markdown import markdown
+from mistletoe import markdown
 
 
 def htmlFromMarkdown(fragment):
-    return markdown(fragment, output_format='html5')
+    return markdown(fragment)
