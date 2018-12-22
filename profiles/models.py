@@ -16,7 +16,7 @@ class UserProfile(models.Model):
     def get_absolute_url(self):
         return self.get_full_url()
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.slug == '':
             self.slug = slugify(self.screenname)
-        super().save()
+        super().save(*args, **kwargs)
