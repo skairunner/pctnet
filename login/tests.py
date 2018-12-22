@@ -4,7 +4,6 @@ from profiles.models import UserProfile
 
 
 class TestRegistration(WebTest):
-    @classmethod
     def try_signup(self, app):
         res = app.get('/login/signup')
         form = res.form
