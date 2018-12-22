@@ -22,6 +22,7 @@ Django = "*"
 dj-commented-view = {git = "https://github.com/skairunner/dj-commented-view.git"}
 bleach = "*"
 mistletoe = "*"
+python-coveralls = "*"
 
 [requires]
 python_version = "3.6"
