@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+before_install:
+  - pip install pipenv
+install:
+  - pipenv install --system --dev
+script:
+  - bash runtests.sh
