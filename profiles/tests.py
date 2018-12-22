@@ -60,8 +60,7 @@ class TestProfileView(WebTest):
         res = self.app.get(editurl, user='lisa')
         form = res.form
         form['slug'] = 'arbitrary-slug'
-        form.submit()
-        res = self.app.get(f'/user/{self.lisa.pk}/')
+        res = form.submit()
         url = res.headers['Location']
         self.assertEqual(url, reverse('viewuser', args=[self.lisa.pk, 'arbitrary-slug']))
 
