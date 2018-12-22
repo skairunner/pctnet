@@ -4,13 +4,15 @@ from profiles.models import UserProfile
 
 
 class TestRegistration(WebTest):
-    def try_signup(self):
+    def try_signup(self, **kwargs):
         res = self.app.get('/login/signup')
         form = res.form
         form['screenname'] = 'Alexander Hamilton'
         form['loginname'] = 'hamilton'
         form['password1'] = 'raiseaGlass3'
         form['password2'] = 'raiseaGlass3'
+        for key, val in kwargs.items():
+            form[key] = val
         return form.submit()
 
     def test_loadpage(self):
@@ -39,3 +41,23 @@ class TestRegistration(WebTest):
         TODO: Test that the following page is, indeed, the front page.
         '''
         res = res.follow()
+
+    def test_duplicated_loginname_errors(self):
+        self.try_signup()
+        res = self.try_signup(screenname='not_ham')
+        self.assertIn('using this loginname', res.text)
+
+    def test_duplicated_screenname_errors(self):
+        self.try_signup()
+        res = self.try_signup(loginname='not_ham')
+        self.assertIn('using this screenname', res.text)
+
+    def test_checks_passwords_filled(self):
+        res = self.try_signup(password1='')
+        self.assertIn('input your password twice', res.text)
+        res = self.try_signup(password2='')
+        self.assertIn('input your password twice', res.text)
+
+    def test_checks_passwords_match(self):
+        res = self.try_signup(password1='ajdk20d9s', password2='ask30ms1')
+        self.assertIn('do not match', res.text)
