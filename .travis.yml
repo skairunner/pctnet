@@ -4,13 +4,30 @@ python:
   - "3.6"
 
 addons:
-  postgresql: "10.5"
+  postgresql: "10"
+  apt:
+    packages:
+      - postgresql-10
+      - postgresql-client-10
+
+env:
+  global:
+  - PGPORT=5433
 
 before_install:
   - pip install pipenv
+  - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+  - sudo service postgresql restart
+  - sleep 1
 
 install:
-  - pipenv install --system --dev
+  - pipenv install --dev
+  - psql -c "CREATE DATABASE pctnet;" -U postgres
+  - python manage.py makemigrations
+  - python manage.py migrate
+
+before_script:
+  - psql -c "ALTER USER postgres WITH PASSWORD 'pass';" -U postgres
 
 script:
   - bash runtests.sh
