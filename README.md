@@ -1,5 +1,8 @@
 # PCTNet
 
+[![Build Status](https://travis-ci.org/skairunner/pctnet.svg?branch=master)](https://travis-ci.org/skairunner/pctnet)
+[![Coverage Status](https://coveralls.io/repos/github/skairunner/pctnet/badge.svg?branch=master)](https://coveralls.io/github/skairunner/pctnet?branch=master)
+
 PCTNet is an free, open-source fanfic community platform, with integrated story archive, interested-based groups and group forums. We hope to provide a fandom-friendly platform that can be self-hosted and provides dedicated space for a fandom to live in. The current design is heavily inspired by fimfiction.net, though it shares no code.
 
 ## Installing
