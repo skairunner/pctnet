@@ -56,7 +56,7 @@ class SignupView(FormView):
         except IntegrityError as e:
             if 'username' in repr(e.__cause__):
                 form.add_error('loginname', 'Someone is already using this loginname.')
-            if 'screenname' in repr(e.__cause__):
+            elif 'screenname' in repr(e.__cause__):
                 form.add_error('screenname', 'Someone is already using this screenname.')
             return self.report_error(form)
 
