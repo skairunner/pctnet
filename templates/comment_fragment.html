@@ -1,7 +1,9 @@
 {% load rules %}
 
-<div>
-  <i>{{ comment.dateposted }}</i>
+<div class='comment'>
+  <span class='dateposted' data-date='{{ comment.dateposted| date:"U" }}'>
+    {{ comment.dateposted }}
+  </span>
   <b>{% include "user_inline_fragment.html" with user=comment.author %} said:</b> {{ comment.commenttext | safe }}
   {% if user.is_authenticated %}
     {% test_rule 'can_delete_comment' user comment as candelete %}

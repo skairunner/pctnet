@@ -1,11 +1,12 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
+import datetime
 
 from django_webtest import WebTest
 from django_dynamic_fixture import G
 
 from profiles.models import UserProfile
-from .models import Story, Chapter
+from .models import Story, Chapter, Comment
 
 
 DEFAULT_STORY_DATA = [
@@ -48,6 +49,26 @@ class TestStory(WebTest):
         out = self.make_story(author, DEFAULT_STORY_DATA)
         return out['story'], out['chapters'][0]
 
+    '''
+    Provide data as array of tuples(author, text) or
+    (author, text, date)
+    '''
+    def add_comments(self, chapter, data):
+        out = []
+        for comment in data:
+            if len(comment) == 2:
+                author, text = comment
+                out.append(G(Comment, parent=chapter, author=author, commenttext=text))
+            else:
+                author, text, date = comment
+                out.append(
+                    G(Comment,
+                      parent=chapter,
+                      author=author,
+                      commenttext=text,
+                      dateposted=date))
+        return out
+
     # Edit button should only appear for authorized
     def test_edit_button_permissions(self):
         story, chapter = self.make_default_story()
@@ -68,3 +89,17 @@ class TestStory(WebTest):
         # Should not have edit permission
         res = self.app.get(editurl, user='other-user', expect_errors=True)
         self.assertIn('403', res.status, 'Illegally accessed unauthorized chapter edit page')
+
+    def test_comments_sorted(self):
+        story, chapter = self.make_default_story()
+        author = User.objects.get(username='author')
+        other = User.objects.get(username='other-user')
+        self.add_comments(chapter, [
+            (author, 'I hope you enjoy!', datetime.date(2017, 3, 2)),
+            (author, 'I really do.', datetime.date(2017, 4, 2)),
+            (other, 'Pretty cool!', datetime.date(2017, 5, 2))
+        ])
+        res = self.app.get(chapter.get_absolute_url())
+        comments = res.html.select('.dateposted')
+        for i in range(1, len(comments)):
+            self.assertTrue(comments[i-1]['data-date'] <= comments[i]['data-date'])

@@ -30,6 +30,7 @@ class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
 
     def get_comment_queryset(self):
         queryset = super().get_comment_queryset()
+        queryset = queryset.order_by('dateposted')
         return queryset.filter(isdeleted=False)
 
     def post(self, *args, **kwargs):
