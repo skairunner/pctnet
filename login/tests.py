@@ -44,10 +44,6 @@ class TestRegistration(WebTest):
     # Check that user is redirected to front page after signup
     def test_redirect(self):
         res = self.try_signup()
-        '''
-        At the moment, only checks that it redirects at all.
-        TODO: Test that the following page is, indeed, the front page.
-        '''
         res = res.follow()
         self.assertTrue(self.check_redirect(res.url), 'User was not directed to home page on account creation')
 
