@@ -2,6 +2,7 @@ from profiles.models import UserProfile
 from django.utils.text import slugify
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import FormView
 from django.db import IntegrityError, transaction
@@ -31,7 +32,7 @@ class UserProfileForm(Form):
 class SignupView(FormView):
     template_name = "login/registration.html"
     form_class = UserProfileForm
-    success_url = reverse_lazy('login')
+    success_url = '/user/'
 
     def report_error(self, form):
         return self.render_to_response(self.get_context_data(form=form))
@@ -59,5 +60,8 @@ class SignupView(FormView):
             elif 'screenname' in repr(e.__cause__):
                 form.add_error('screenname', 'Someone is already using this screenname.')
             return self.report_error(form)
+
+        user = authenticate(username=loginname, password=pwd)
+        login(self.request, user)
 
         return HttpResponseRedirect(self.get_success_url())

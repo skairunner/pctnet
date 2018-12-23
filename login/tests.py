@@ -28,6 +28,9 @@ class TestRegistration(WebTest):
             return True
         except UserProfile.DoesNotExist:
             return False
+    
+    def check_redirect(self, redirect_url, user_id='5', username='alexander-hamilton'):
+        return redirect_url == f'/user/{user_id}/{username}/'
 
     def test_loadpage(self):
         self.app.get('/login/signup')
@@ -46,6 +49,7 @@ class TestRegistration(WebTest):
         TODO: Test that the following page is, indeed, the front page.
         '''
         res = res.follow()
+        self.assertTrue(self.check_redirect(res.url), 'User was not directed to home page on account creation')
 
     def test_duplicated_loginname_errors(self):
         self.try_signup()
