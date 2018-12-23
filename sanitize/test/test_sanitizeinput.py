@@ -59,4 +59,3 @@ def test_dont_strip_src_attr():
     raw = "<img src='whatever'></img>"
     html = sanitizeInput(raw)
     assert 'src="whatever"' in html
-
