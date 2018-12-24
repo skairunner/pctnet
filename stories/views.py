@@ -132,6 +132,11 @@ class ChapterSubmitView(CreateView):
     template_name = 'stories/chapter_new.html'
     story = None
 
+    def get_form(self, form_class=None):
+        form = super(ChapterSubmitView, self).get_form(form_class)
+        form.fields['dateposted'].widget = DateInput(attrs={"type": "date"})
+        return form
+
     def get_story(self):
         if not self.story:
             self.story = Story.objects.get(id=self.kwargs['pk'])
@@ -180,6 +185,11 @@ class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     pk_url_kwarg = 'chapterpk'
     template_name = 'stories/chapter_edit.html'
     permission_required = 'stories.change_chapter'
+
+    def get_form(self, form_class=None):
+        form = super(ChapterEditView, self).get_form(form_class)
+        form.fields['dateposted'].widget = DateInput(attrs={"type": "date"})
+        return form
 
     def get_context_data(self, **kwargs):
         kwargs['story'] = self.object.parent
