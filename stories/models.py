@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect
 
-from sanitize import sanitizeInput
+from sanitize import sanitizeInput, sanitizeMarkdown
 
 
 class Story(models.Model):
@@ -60,6 +60,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     dateposted = models.DateTimeField()
     commenttext = models.CharField(max_length=4250)
+    commenttext_html = models.TextField(default='')
     isdeleted = models.BooleanField(default=False)
 
     def get_anchor_prefix(self):
@@ -67,3 +68,7 @@ class Comment(models.Model):
 
     def get_absolute_url(self):
         return f"{reverse('chapter-only-view', args=[self.parent.id])}#c{self.id}"
+
+    def save(self, *args, **kwargs):
+        self.commenttext_html = sanitizeMarkdown(self.commenttext)
+        super().save(*args, **kwargs)

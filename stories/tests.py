@@ -105,7 +105,7 @@ class TestStory(WebTest):
             self.assertTrue(comments[i-1]['data-date'] <= comments[i]['data-date'])
 
     def test_markdown_processed(self):
-        story, chapters = self.make_default_story()
+        story, chapter = self.make_default_story()
         res = self.app.get(reverse('addchapter', args=[story.pk]), user='author')
         form = res.form
         form['dateposted'] = '2018-04-09'
@@ -116,3 +116,12 @@ class TestStory(WebTest):
         html = res.html
         self.assertIn('<strong>', str(html.select_one('.chaptertext')))
         self.assertIn('<em>', str(html.select_one('.chaptersummary')))
+
+    def test_comment_markdown_processed(self):
+        story, chapter = self.make_default_story()
+        res = self.app.get(chapter.get_absolute_url(), user='not-author')
+        form = res.form
+        form['commenttext'] = 'I *love* this!'
+        res = form.submit().follow()
+        html = res.html
+        self.assertIn('<em>love</em>', str(html.select_one('#comments')))

@@ -1,6 +1,6 @@
 <div id="{{ comment.get_anchor_prefix }}{{ comment.id }}">
-  <b>{% include "user_inline_fragment.html" with user=comment.author %} said:</b> {{ comment.commenttext | safe }}
   <span class='dateposted' data-date='{{ comment.dateposted| date:"U" }}'>
     {{ comment.dateposted }}
   </span>
+  <b>{% include "user_inline_fragment.html" with user=comment.author %} said:</b> {{ comment.commenttext_html | safe }}
 </div>
