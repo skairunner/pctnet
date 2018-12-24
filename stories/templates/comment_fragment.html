@@ -1,6 +1,6 @@
 {% load rules %}
 
-<div>
+<div class='comment' id='{{ comment.get_anchor_prefix }}{{ comment.id }}'>
   {% include 'comment_content_fragment.html' with comment=comment %}
   {% if user.is_authenticated %}
     {% test_rule 'can_delete_comment' user comment as candelete %}
@@ -9,7 +9,7 @@
     <a href="{% url 'editcomment' pk=comment.pk %}"><button>edit</button></a>
     {% endif %}
     {% if candelete %}
-    <a href="{% url 'deletecomment' pk=comment.pk %}"><button>delete</button></a>
+    <a href="% url 'deletecomment' pk=comment.pk %"><button>delete</button></a>
     {% endif %}
   {% endif %}
 </div>
