@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+New chapter – {{ story.worktitle }}
+{% endblock %}
+
 {% block content %}
 {% include "stories/edit_navbar_fragment.html" with buttons=buttons %}
 <h2>Add chapter to story <em>{{ story.worktitle }}</em></h2>

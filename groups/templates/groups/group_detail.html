@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load rules %}
 
+{% block title %}
+{{ object.groupname }}
+{% endblock %}
+
 {% block content %}
 <h1>{{ object.groupname }}</h1>
 {% test_rule 'can_edit_grouppage' user object as canedit %}

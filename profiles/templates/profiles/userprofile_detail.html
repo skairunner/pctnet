@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+{{ object.screenname }}
+{% endblock title %}
+
 {% block content %}
 <h1>{{ object.screenname }}</h1>
 <div class='bio'><i>Bio:</i> <span class='bio-content'>{{ object.bio |safe }}</span></div>

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+Editing "{{ object.worktitle }}"
+{% endblock %}
+
 {% block content %}
 {% include "stories/edit_navbar_fragment.html" with buttons=buttons %}
 <form method='POST'>

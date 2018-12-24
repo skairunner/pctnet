@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Editing post
+{% endblock %}
+
 {% block content %}
 <form action='{{ request.path }}' method='POST'>
   {% csrf_token %}

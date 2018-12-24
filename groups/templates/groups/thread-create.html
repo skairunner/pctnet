@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}
+New thread
+{% endblock %}
+
 {% block content %}
 <form action='{{ request.path }}' method='POST'>
   {% csrf_token %}

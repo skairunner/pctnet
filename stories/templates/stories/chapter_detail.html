@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load rules %}
 
+{% block title %}
+{{ object.parent.worktitle }} – {{ object.author.userprofile.screenname }}
+{% endblock %}
+
 {% block content %}
 <nav class="navigation">
   {% has_perm 'stories.change_story' user object.parent as canedit %}

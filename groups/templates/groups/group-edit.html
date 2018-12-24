@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Editing homepage – {{ object.groupname }}
+{% endblock %}
+
+
 {% block content %}
 <h1>Editing group '{{ object.groupname }}'</h1>
 <form method='post' action=''>
