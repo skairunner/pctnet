@@ -6,7 +6,7 @@
 {% for post in object_list %}
 <div id='post{{ post.pk }}'>
   <div>{% include "user_inline_fragment.html" with user=post.author %} posted at {{ post.dateposted }}</div>
-  <div>{{ post.postcontent|safe }}</div>
+  <div>{{ post.postcontent_html |safe }}</div>
   <a href='{{ post.get_absolute_url }}'>Permalink</a>
   <hr>
 </div>

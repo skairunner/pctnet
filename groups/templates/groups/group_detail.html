@@ -7,7 +7,7 @@
 {% if canedit %}
 <a href='{% url "editgroup" group.pk %}'>Edit homepage</a>
 {% endif %}
-<div>{{ object.grouppage |safe }}</div>
+<div>{{ object.grouppage_html |safe }}</div>
   <a href='{% url "forum" object.pk object.slug %}'>Forum</a>
 <hr>
 <div class='comments'>

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from stories.models import Story
+from sanitize import sanitizeInput, sanitizeMarkdown
 
 
 class Group(models.Model):
@@ -12,9 +13,14 @@ class Group(models.Model):
     admins = models.ManyToManyField(User, related_name='adminof')
     mods = models.ManyToManyField(User, related_name='modof')
     grouppage = models.TextField(default='')
+    grouppage_html = models.TextField(default='')
 
     def get_absolute_url(self):
         return reverse('group-homepage', args=[self.id, self.slug])
+
+    def save(self, *args, **kwargs):
+        self.grouppage_html = sanitizeInput(self.grouppage)
+        super().save(*args, **kwargs)
 
 
 class GroupFolders(models.Model):
@@ -27,7 +33,12 @@ class GroupComment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     dateposted = models.DateTimeField()
     commenttext = models.CharField(max_length=4250)
+    commenttext_html = models.TextField(default='')
     isdeleted = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        self.commenttext_html = sanitizeMarkdown(self.commenttext)
+        super().save(*args, **kwargs)
 
 
 class GroupForum(models.Model):
@@ -54,7 +65,12 @@ class GroupForumThreadPost(models.Model):
     thread = models.ForeignKey(GroupForumThread, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     postcontent = models.TextField()
+    postcontent_html = models.TextField(default='')
     dateposted = models.DateTimeField()
 
     def get_absolute_url(self):
         return f'{self.thread.get_absolute_url()}#post{self.id}'
+
+    def save(self, *args, **kwargs):
+        self.postcontent_html = sanitizeInput(self.postcontent)
+        super().save(*args, **kwargs)
