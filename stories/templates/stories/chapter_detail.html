@@ -26,9 +26,9 @@
 <h3>Date posted: {{ object.dateposted }} </h3>
 <div class='worksummary'><i>Work summary:</i> <span class='worksummary-content'>{{ object.parent.worksummary }}</span></div>
 <hr>
-<div class='chaptersummary'><i>Chapter summary:</i> <span class='chaptersummary-content'>{{ object.chaptersummary |safe }}</span></div>
+<div class='chaptersummary'><i>Chapter summary:</i> <span class='chaptersummary-content'>{{ object.chaptersummary_html |safe }}</span></div>
 <hr>
-<div class='chaptertext'>{{ object.chaptertext |safe }}</div>
+<div class='chaptertext'>{{ object.chaptertext_html |safe }}</div>
 <hr>
 <div id="comments">
   {% for comment in comment_list %}

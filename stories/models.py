@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect
 
+from sanitize import sanitizeInput
+
 
 class Story(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -32,9 +34,11 @@ class Chapter(models.Model):
     chapterorder = models.IntegerField(default=0)
     dateposted = models.DateField()
     chaptertext = models.TextField()
+    chaptertext_html = models.TextField(default='')
     chaptertitle = models.CharField(max_length=255)
     slug = models.SlugField(default="")
-    chaptersummary = models.TextField(max_length=1250)
+    chaptersummary = models.TextField(max_length=1250, default='', blank=True)
+    chaptersummary_html = models.TextField(default='')
 
     def __str__(self):
         return f"[Chapter: {self.parent.worktitle}--{self.chaptertitle}]"
@@ -46,6 +50,8 @@ class Chapter(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.chaptertitle)
+        self.chaptertext_html = sanitizeInput(self.chaptertext)
+        self.chaptersummary_html = sanitizeInput(self.chaptersummary)
         super(Chapter, self).save(*args, **kwargs)
 
 
