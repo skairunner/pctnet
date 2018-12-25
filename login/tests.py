@@ -5,7 +5,7 @@ from profiles.models import UserProfile
 
 class TestRegistration(WebTest):
     def try_signup(self, **kwargs):
-        res = self.app.get('/login/signup')
+        res = self.app.get('/signup/')
         form = res.form
         form['screenname'] = 'Alexander Hamilton'
         form['loginname'] = 'hamilton'
@@ -28,12 +28,12 @@ class TestRegistration(WebTest):
             return True
         except UserProfile.DoesNotExist:
             return False
-    
+
     def check_redirect(self, redirect_url, user_id='5', username='alexander-hamilton'):
         return redirect_url == f'/user/{user_id}/{username}/'
 
     def test_loadpage(self):
-        self.app.get('/login/signup')
+        self.app.get('/signup/')
 
     # Check that a user is actually made when signup
     def test_signup(self):
