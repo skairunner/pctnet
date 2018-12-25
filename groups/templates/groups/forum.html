@@ -6,6 +6,7 @@ Forums – {{ group.groupname }}
 
 {% block content %}
 <h1>{{ group.groupname }} forum </h1>
+<a href='{% url "newthread" group.id group.slug %}'>New thread</a>
 <hr>
 {% for thread in object_list %}
   <div class='thread'>

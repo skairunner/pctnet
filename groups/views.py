@@ -126,6 +126,9 @@ class GroupThreadCreate(LoginRequiredMixin, FormView):
     template_name = 'groups/thread-create.html'
     form_class = NewThreadForm
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
     def get_forum(self):
         group = Group.objects.get(id=self.kwargs['grouppk'])
         return group.groupforum_set.all()[0]
@@ -181,6 +184,7 @@ class ThreadView(CommentPostMixin, ListView):
 
     def get_context_data(self, **kwargs):
         kwargs['thread'] = self.get_thread()
+        kwargs['group'] = self.get_thread().forum.group
         return super().get_context_data(**kwargs)
 
     def postcomment_form_valid(self, form):

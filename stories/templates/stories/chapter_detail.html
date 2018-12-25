@@ -10,6 +10,7 @@
   {% has_perm 'stories.change_story' user object.parent as canedit %}
   {% if canedit %}
   <a class='edit-chapter' href='{% url "editchapter" object.id %}'><button>Edit chapter</button></a>
+  <a class='add-chapter' href='{% url "addchapter" object.parent.id %}'><button>Add chapter</button></a>
   {% endif %}
   {% if previous_chapter %}
   <a href="{{ previous_chapter }}"><button>Previous Chapter</button></a>

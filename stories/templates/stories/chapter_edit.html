@@ -5,7 +5,7 @@ Editing "{{ object.chaptertitle }}" – {{ object.parent.worktitle }}
 {% endblock title %}
 
 {% block content %}
-{% include "stories/edit_navbar_fragment.html" with buttons=buttons %}
+{% include "stories/edit_navbar_fragment.html" with buttons=buttons story=object.parent %}
 <form method='POST'>
   {% csrf_token %}
   {{ form }}

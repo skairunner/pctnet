@@ -44,6 +44,9 @@ class GroupComment(models.Model):
 class GroupForum(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)  # possibly add support for a hidden mod forum, or other special forums
 
+    def get_absolute_url(self):
+        return reverse('forum', args=[self.group.pk, self.group.slug])
+
 
 class GroupForumThread(models.Model):
     forum = models.ForeignKey(GroupForum, on_delete=models.CASCADE)

@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ thread.threadname }} – {{ thread.forum.group.groupname }}
+{{ thread.threadname }} – {{ group.groupname }}
 {% endblock %}
 
 {% block content %}
-<h2>Topic: {{ thread.threadname }}</h2>
+<h2>
+  <a href='{{ group.get_absolute_url }}'>{{ group.groupname }}</a>
+  &gt;
+  <a href='{{ thread.forum.get_absolute_url }}'>Forum</a>
+  &gt;
+  {{ thread.threadname }}
+</h2>
 <hr>
 {% for post in object_list %}
 <div id='post{{ post.pk }}'>

@@ -5,7 +5,7 @@ Editing "{{ object.worktitle }}"
 {% endblock %}
 
 {% block content %}
-{% include "stories/edit_navbar_fragment.html" with buttons=buttons %}
+{% include "stories/edit_navbar_fragment.html" with buttons=buttons story=object %}
 <form method='POST'>
   {% csrf_token %}
   {{ form }}

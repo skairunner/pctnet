@@ -5,10 +5,13 @@ Groups
 {% endblock %}
 
 {% block content %}
+<a href='{% url "makegroup" %}'>Make group</a>
 {% for group in object_list %}
 <div class='group'>
-  <h3>group.groupname</h3>
-  <span>Members: {{ group.members.count }}</span>
+  <a href='{{ group.get_absolute_url }}'>
+    <h3>{{ group.groupname }}</h3>
+  </a>
+    <span>Members: {{ group.members.count }}</span>
 </div>
 {% endfor %}
 {% endblock %}

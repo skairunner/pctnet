@@ -5,6 +5,8 @@ Works
 {% endblock %}
 
 {% block content %}
+<a href='{% url "submitstory" %}'>Submit new work</a>
+<hr>
 {% for story in object_list %}
   {% include "story_overview_fragment.html" with story=story %}
 {% endfor %}
