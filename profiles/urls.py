@@ -4,7 +4,7 @@ from .views import CurrentUserRedirect, UserProfileView, UserRedirect, ProfileUp
 
 
 urlpatterns = [
-    path('', CurrentUserRedirect),
+    path('', CurrentUserRedirect, name='currentuser'),
     path('<int:pk>/', UserRedirect),
     path('<int:pk>/<str:slug>/', UserProfileView.as_view(), name='viewuser'),
     path('update/<int:pk>/', ProfileUpdateView.as_view(), name='updatebio'),
