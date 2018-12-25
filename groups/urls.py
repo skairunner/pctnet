@@ -18,4 +18,5 @@ urlpatterns = [
     path('<int:pk>/', v.redirectGroup),
     path('<int:pk>/edit', v.GroupHomepageEdit.as_view(), name='editgroup'),
     path('<int:pk>/<slug:slug>', v.GroupHomepageView.as_view(), name='group-homepage'),
+    path('', v.GroupIndex.as_view(), name='group-index'),
 ]

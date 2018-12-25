@@ -16,6 +16,11 @@ import rules
 from .models import Group, GroupComment, GroupForum, GroupForumThread, GroupForumThreadPost
 
 
+class GroupIndex(ListView):
+    model = Group
+    template_name = 'groups/group-list.html'
+
+
 def redirectGroup(request, pk):
     group = Group.objects.get(id=pk)
     return HttpResponseRedirect(reverse('group-homepage', args=[pk, group.slug]))
