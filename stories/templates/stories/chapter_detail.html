@@ -26,6 +26,9 @@
   </select>
   {% endif %}
 </nav>
+{% if object.isdraft or object.parent.isdraft %}
+<div id='draftwarning'><em>This is a draft. It is not visible to other users.</em></div>
+{% endif %}
 <h1>{{ object.parent.worktitle }}</h1>
 <h2>By {% include "user_inline_fragment.html" with user=object.author %}</h2>
 <h3>Date posted: {{ object.dateposted }} </h3>

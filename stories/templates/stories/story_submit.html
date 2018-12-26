@@ -12,12 +12,7 @@ New story
 
 <form method="post" action="{% url 'submitstory' %}">
 {% csrf_token %}
-{{ form.chaptertitle.label }}
-{{ form.chaptertitle }}
-{{ form.dateposted.label }}
-{{ form.dateposted }}
-{{ form.chaptertext.label }}
-{{ form.chaptertext }}
+{{ form.as_p }}
 <input type="submit" value="Post">
 </form>
 {% endblock %}

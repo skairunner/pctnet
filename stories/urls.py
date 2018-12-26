@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views as v
 
-
 urlpatterns = [
     # Chapters first due to URL routing
     path('chapter/<int:chapterpk>', v.ChapterRedirect, name='chapter-only-view'),

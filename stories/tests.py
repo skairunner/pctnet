@@ -21,57 +21,61 @@ DEFAULT_STORY_DATA = [
         'chaptertitle': 'Second chapter title'
     }]
 
+'''
+Provide an array of dicts to construct a story.
+The first dict should be the story data.
+Args will be provided directly to G()
+'''
+def make_story(author, data):
+    out = {}
+    out['story'] = G(Story, owner=author, **data[0])
+    out['chapters'] = []
+    for i, attrs in enumerate(data[1:]):
+        out['chapters'].append(
+            G(Chapter,
+              author=author,
+              parent=out['story'],
+              chapterorder=i,
+              **attrs))
+    out['story'].firstchapter_id = out['chapters'][0].id
+    return out
+
+
+def make_default_story():
+    author = G(User, username='author')
+    notauthor = G(User, username='other-user')
+    G(UserProfile, user=author, screenname='Author')
+    G(UserProfile, user=notauthor, screenname='Reader')
+    out = make_story(author, DEFAULT_STORY_DATA)
+    return out['story'], out['chapters'][0]
+
+
+'''
+Provide data as array of tuples(author, text) or
+(author, text, date)
+'''
+def add_comments(chapter, data):
+    out = []
+    for comment in data:
+        if len(comment) == 2:
+            author, text = comment
+            out.append(G(Comment, parent=chapter, author=author, commenttext=text))
+        else:
+            author, text, date = comment
+            out.append(
+                G(Comment,
+                  parent=chapter,
+                  author=author,
+                  commenttext=text,
+                  dateposted=date))
+    return out
+
 
 class TestStory(WebTest):
-    '''
-    Provide an array of dicts to construct a story.
-    The first dict should be the story data.
-    Args will be provided directly to G()
-    '''
-    def make_story(self, author, data):
-        out = {}
-        out['story'] = G(Story, owner=author, **data[0])
-        out['chapters'] = []
-        for i, attrs in enumerate(data[1:]):
-            out['chapters'].append(
-                G(Chapter,
-                  author=author,
-                  parent=out['story'],
-                  chapterorder=i,
-                  **attrs))
-        return out
-
-    def make_default_story(self):
-        author = G(User, username='author')
-        notauthor = G(User, username='other-user')
-        G(UserProfile, user=author, screenname='Author')
-        G(UserProfile, user=notauthor, screenname='Reader')
-        out = self.make_story(author, DEFAULT_STORY_DATA)
-        return out['story'], out['chapters'][0]
-
-    '''
-    Provide data as array of tuples(author, text) or
-    (author, text, date)
-    '''
-    def add_comments(self, chapter, data):
-        out = []
-        for comment in data:
-            if len(comment) == 2:
-                author, text = comment
-                out.append(G(Comment, parent=chapter, author=author, commenttext=text))
-            else:
-                author, text, date = comment
-                out.append(
-                    G(Comment,
-                      parent=chapter,
-                      author=author,
-                      commenttext=text,
-                      dateposted=date))
-        return out
 
     # Edit button should only appear for authorized
     def test_edit_button_permissions(self):
-        story, chapter = self.make_default_story()
+        story, chapter = make_default_story()
         res = self.app.get(chapter.get_absolute_url(), user='author')
         sel = res.html.select_one('.edit-chapter')
         self.assertIsNotNone(sel, 'Could not find edit chapter button')
@@ -81,7 +85,7 @@ class TestStory(WebTest):
 
     # The actual view should also only appear for authorized
     def test_edit_view_auth_protected(self):
-        story, chapter = self.make_default_story()
+        story, chapter = make_default_story()
         # Should have edit permission
         editurl = reverse('editchapter', args=[chapter.pk])
         res = self.app.get(editurl, user='author')
@@ -90,22 +94,8 @@ class TestStory(WebTest):
         res = self.app.get(editurl, user='other-user', expect_errors=True)
         self.assertIn('403', res.status, 'Illegally accessed unauthorized chapter edit page')
 
-    def test_comments_sorted(self):
-        story, chapter = self.make_default_story()
-        author = User.objects.get(username='author')
-        other = User.objects.get(username='other-user')
-        self.add_comments(chapter, [
-            (author, 'I hope you enjoy!', datetime.date(2017, 3, 2)),
-            (author, 'I really do.', datetime.date(2017, 4, 2)),
-            (other, 'Pretty cool!', datetime.date(2017, 5, 2))
-        ])
-        res = self.app.get(chapter.get_absolute_url())
-        comments = res.html.select('.dateposted')
-        for i in range(1, len(comments)):
-            self.assertTrue(comments[i-1]['data-date'] <= comments[i]['data-date'])
-
     def test_markdown_processed(self):
-        story, chapter = self.make_default_story()
+        story, chapter = make_default_story()
         res = self.app.get(reverse('addchapter', args=[story.pk]), user='author')
         form = res.form
         form['dateposted'] = '2018-04-09'
@@ -117,8 +107,73 @@ class TestStory(WebTest):
         self.assertIn('<strong>', str(html.select_one('.chaptertext')))
         self.assertIn('<em>', str(html.select_one('.chaptersummary')))
 
+    def test_chapter_draft(self):
+        story, chapter = make_default_story()
+        res = self.app.get(reverse('addchapter', args=[story.pk]), user='author')
+        form = res.form
+        form['dateposted'] = '2017-08-09'
+        form['chaptertitle'] = 'draft'
+        form['chaptertext'] = '.'
+        form['isdraft'] = True
+        url = form.submit().headers['Location']
+        res = self.app.get(url, user='author')
+        self.assertIsNotNone(res.html.select_one('#draftwarning'), "Draft warning doesn't exist")
+        res = self.app.get(url, user='not-author', expect_errors=True)
+        self.assertIn('404', res.status, 'Operation unexpectedly succeeded')
+
+    def test_story_draft(self):
+        story, chapter = make_default_story()
+        story.isdraft = True
+        story.save()
+
+        # Check all chapters of story have draft status
+        for ch in story.chapter_set.all():
+            res = self.app.get(ch.get_absolute_url(), user='author')
+            self.assertIsNotNone(res.html.select_one('#draftwarning'), "Draft warning doesn't exist")
+        # Check that all chapters 404 for others
+        for ch in story.chapter_set.all():
+            res = self.app.get(ch.get_absolute_url(), user='not-author', expect_errors=True)
+            self.assertIn('404', res.status, 'Operation unexpectedly succeeded')
+
+    # StoryRedirect should fail for non-author
+    def test_story_redirect_draft(self):
+        story, chapter = make_default_story()
+        story.isdraft = True
+        story.save()
+        url = f'/stories/{story.id}/slug/'
+        res = self.app.get(url, user='author').follow()
+        self.assertIsNotNone(res.html.select_one('#draftwarning'), "Draft warning doesn't exist")
+        res = self.app.get(url, user='not-author', expect_errors=True)
+        self.assertIn('404', res.status)
+
+    def test_chapter_redirect_draft(self):
+        story, chapter = make_default_story()
+        chapter.isdraft = True
+        chapter.save()
+        url = f'/stories/chapter/{chapter.pk}'
+        res = self.app.get(url, user='author').follow()
+        self.assertIsNotNone(res.html.select_one('#draftwarning'), "Draft warning doesn't exist")
+        res = self.app.get(url, user='not-author', expect_errors=True)
+        self.assertIn('404', res.status)
+
+
+class TestComments(WebTest):
+    def test_comments_sorted(self):
+        story, chapter = make_default_story()
+        author = User.objects.get(username='author')
+        other = User.objects.get(username='other-user')
+        add_comments(chapter, [
+            (author, 'I hope you enjoy!', datetime.date(2017, 3, 2)),
+            (author, 'I really do.', datetime.date(2017, 4, 2)),
+            (other, 'Pretty cool!', datetime.date(2017, 5, 2))
+        ])
+        res = self.app.get(chapter.get_absolute_url())
+        comments = res.html.select('.dateposted')
+        for i in range(1, len(comments)):
+            self.assertTrue(comments[i-1]['data-date'] <= comments[i]['data-date'])
+
     def test_comment_markdown_processed(self):
-        story, chapter = self.make_default_story()
+        story, chapter = make_default_story()
         res = self.app.get(chapter.get_absolute_url(), user='not-author')
         form = res.form
         form['commenttext'] = 'I *love* this!'

@@ -15,6 +15,7 @@ class Story(models.Model):
     worktitle = models.CharField(max_length=255)
     slug = models.SlugField(default="")
     firstchapter_id = models.IntegerField(default=-1)
+    isdraft = models.BooleanField(default=False)
 
     def __str__(self):
         return f"[Story: {self.worktitle}]"
@@ -39,6 +40,7 @@ class Chapter(models.Model):
     slug = models.SlugField(default="")
     chaptersummary = models.TextField(max_length=1250, default='', blank=True)
     chaptersummary_html = models.TextField(default='')
+    isdraft = models.BooleanField(default=False)
 
     def __str__(self):
         return f"[Chapter: {self.parent.worktitle}--{self.chaptertitle}]"

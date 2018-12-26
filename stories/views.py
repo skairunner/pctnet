@@ -16,9 +16,25 @@ from datetime import datetime
 from .models import Story, Chapter, Comment
 
 
+def can_view_chapter(user, chapter):
+    if chapter.isdraft or chapter.parent.isdraft:
+        return rules.test_rule('can_view_chapter_draft', user, chapter)
+    return True
+
+
+def can_view_story(user, story):
+    if story.isdraft:
+        return rules.test_rule('can_view_story_draft', user, story)
+    return True
+
+
 class StoryIndexView(ListView):
     model = Story
     template_name = 'stories/story-index.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(isdraft=False)
 
 
 class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
@@ -27,6 +43,12 @@ class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
     parentfield = 'parent'
     pk_url_kwarg = 'chapterpk'
     postcomment_fields = ['commenttext']
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not can_view_chapter(self.request.user, obj):
+           raise Http404()
+        return obj
 
     def get_comment_queryset(self):
         queryset = super().get_comment_queryset()
@@ -39,9 +61,9 @@ class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
         return super().post(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        data = super(ChapterDetailView, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
         # Get chapter list and current chapter
-        chapterset = self.object.parent.chapter_set.all().order_by('chapterorder')
+        chapterset = [ch for ch in self.object.parent.chapter_set.all() if can_view_chapter(self.request.user, ch)]
 
         # Find current
         i = 0
@@ -74,12 +96,16 @@ class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
 # Non-slugged chapter to slugged chapter
 def ChapterRedirect(request, *args, **kwargs):
     obj = get_object_or_404(Chapter, pk=kwargs["chapterpk"])
+    if not can_view_chapter(request.user, obj):
+        raise Http404()
     return HttpResponseRedirect(obj.get_absolute_url())
 
 
 # Redirects non-slugged story to slugged story
 def StoryRedirect(request, *args, **kwargs):
     obj = get_object_or_404(Story, pk=kwargs["pk"])
+    if not can_view_story(request.user, obj):
+        raise Http404()
     return HttpResponseRedirect(reverse("viewstory", args=[obj.pk, obj.slug]))
 
 
@@ -87,13 +113,17 @@ def StoryRedirect(request, *args, **kwargs):
 # page in the future
 def StoryToChapterRedirect(request, *args, **kwargs):
     obj = get_object_or_404(Story, pk=kwargs["pk"])
+    if not can_view_story(request.user, obj):
+        raise Http404()
     ch = get_object_or_404(Chapter, pk=obj.firstchapter_id)
+    if not can_view_chapter(request.user, ch):
+        raise Http404()
     slug = f"{obj.slug}.{ch.slug}"
     return HttpResponseRedirect(reverse("viewchapter", args=[obj.pk, obj.firstchapter_id, slug]))
 
 
 class StorySubmitView(LoginRequiredMixin, CreateView):
-    fields = ["chaptertitle", "dateposted", "chaptertext"]
+    fields = ["chaptertitle", "dateposted", "chaptertext", "isdraft"]
     model = Chapter  # easier to backfill Story from Chapter
     template_name = "stories/story_submit.html"
 
@@ -128,7 +158,7 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
 
 class ChapterSubmitView(CreateView):
     model = Chapter
-    fields = ['dateposted', 'chaptertitle', 'chaptersummary', 'chaptertext']
+    fields = ['dateposted', 'chaptertitle', 'chaptersummary', 'chaptertext', 'isdraft']
     template_name = 'stories/chapter_new.html'
     story = None
 
@@ -169,7 +199,7 @@ def getEditNavButtons(story, chapters, current=-1):
 
 class StoryEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Story
-    fields = ['worktitle', 'worksummary']
+    fields = ['worktitle', 'worksummary', 'isdraft']
     template_name = 'stories/story_edit.html'
     permission_required = 'stories.change_story'
 
@@ -181,7 +211,7 @@ class StoryEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Chapter
-    fields = ['chaptertitle', 'chaptersummary', 'chaptertext', 'dateposted']
+    fields = ['chaptertitle', 'chaptersummary', 'chaptertext', 'dateposted', 'isdraft']
     pk_url_kwarg = 'chapterpk'
     template_name = 'stories/chapter_edit.html'
     permission_required = 'stories.change_chapter'
