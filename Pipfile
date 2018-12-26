@@ -8,6 +8,7 @@ coverage = "*"
 django-dynamic-fixture = "*"
 django-webtest = "*"
 pytest = "*"
+flake8 = "*"
 
 [packages]
 dj-database-url = "*"
