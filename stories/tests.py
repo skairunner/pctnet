@@ -72,6 +72,16 @@ def add_comments(chapter, data):
 
 
 class TestStory(WebTest):
+    def test_chapter_one_linked_correctly(self):
+        res = self.app.get(reverse('submitstory'), user='author')
+        form = res.form
+        form['chaptertitle'] = 'New Story'
+        form['dateposted'] = '2018-03-02'
+        form['chaptertext'] = '.'
+        form.submit()
+        story = Story.objects.get(worktitle='New Story')
+        chapter = Chapter.objects.get(parent=story)
+        self.assertEqual(story.firstchapter_id, chapter.id)
 
     # Edit button should only appear for authorized
     def test_edit_button_permissions(self):
