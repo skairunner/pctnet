@@ -1,23 +1,38 @@
+{% load i18n %}
+{% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>{% block title %}{% endblock title %} [PCTNet]</title>
-    </head>
 
-    <body>
-    <nav id='main-nav'>
-        <ul>
-            <li><a href='{% url "storyindex" %}'>Stories</a></li>
-            <li><a href='{% url "group-index" %}'>Groups</a></li>
-            {% if user.is_authenticated %}
-            <li><a href='{% url "currentuser" %}'>{{ user.userprofile.screenname }}</a></li>
-            <li><a href='{% url "logout" %}'>Logout</a></li>
-            {% else %}
-            <li><a href='{% url "login" %}'>Login</a></li>
-            <li><a href='{% url "signup" %}'>Signup</a></li>
-            {% endif %}
-        </ul>
+<head>
+    <title>{% block title %}{% endblock title %} [Wormfic.net]</title>
+    <link crossorigin="anonymous" media="all" rel="stylesheet" href="{% static "/css/base.css" %}" />
+    <!-- @todo minified css and js from cdn -->
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="noChonk">
+            <span class="site-branding">
+                <a href="">Wormfic.net</a> <!-- @todo use template tag -->
+            </span>
+            <ul class="nav-items-standard">
+                <li><a href='{% url "storyindex" %}'>Stories</a></li>
+                <li><a href='{% url "group-index" %}'>Groups</a></li>
+            </ul>
+            <ul class="nav-items-user">
+                {% if user.is_authenticated %}
+                <li><a href='{% url "currentuser" %}'>{{ user.userprofile.screenname }}</a></li>
+                <li><a href='{% url "logout" %}'>Logout</a></li>
+                {% else %}
+                <li><a href='{% url "login" %}'>Login</a></li>
+                <li><a href='{% url "signup" %}'>Signup</a></li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
+    <main>
     {% block content %}{% endblock content %}
-    </body>
+    </main>
+</body>
+
 </html>
