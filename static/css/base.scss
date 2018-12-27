@@ -4,3 +4,120 @@
  * can be found in the LICENSE file.
  */
 
+$fontHeader: 'Slabo 27px', serif;
+$fontCopy: 'Lato', sans-serif;
+
+$colP: #333;
+$colPL: #5c5c5c;
+$colPD: #0c0c0c;
+
+$colS: #ffda30;
+$colSL: #ffff68;
+$colSD: #c8a900;
+
+$colBG: #f5f5f6;
+$colBGD: #e1e2e1;
+
+$width: 1170px;
+
+/* sass vars END */
+
+@import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i|Slabo+27px&subset=latin-ext');
+
+body {
+    font-family: $fontCopy;
+    margin: 0;
+    background-color: $colBGD;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $fontHeader;
+}
+
+main {
+    width: $width;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: $colP;
+}
+
+a {
+    text-decoration: none;
+    color: $colPL;
+}
+a:hover {
+    color: $colPD;
+}
+
+
+/* Top navbar stuff */
+nav {
+    background-color: $colPD;
+    color: $colS;
+    padding: 0.1em 1em 0.1em 1em;
+}
+nav .noChonk {
+    width: $width;
+    margin-right: auto;
+    margin-left: auto;
+}
+nav a {
+    text-decoration: none;
+    color: inherit;
+}
+nav a:hover {
+    color: $colSD;
+}
+nav .site-branding {
+    font-family: $fontHeader;
+    font-size: x-large;
+    background-image: url('/static/img/logoWormfic.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
+}
+nav ul {
+    list-style: none;
+    display: inline-flex;
+}
+nav li {
+    padding-right: 2em;
+    vertical-align: middle;
+    height: 100%;
+    padding-right: 1em;
+    padding-left: 1em;
+    height: 100%;
+}
+.nav-items-user {
+    float: right;
+}
+
+
+/* forms */
+.formItem label, .formItem .shim {
+    min-width: 10em;
+    display: inline-block;
+    text-align: right;
+    padding-right: 0.5em;
+}
+.formItem {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+.formItem input {
+    padding: 5px;
+    width: 20em;
+}
+.formItem input[type='submit'] {
+    width: initial;
+    background-color: $colS;
+    border: 1px solid $colSD;
+    font-size: large;
+    padding: 0.5em 1em;
+}
+.formItem a {
+    padding-left: 1em;
+    padding-right: 1em;
+}
