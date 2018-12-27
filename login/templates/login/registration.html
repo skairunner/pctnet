@@ -5,9 +5,29 @@ Sign up
 {% endblock %}
 
 {% block content %}
+<h1>Register an Account</h1>
+<p>By registering an account on Wormfic.net, you agree to our <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
 <form method='post'>
   {% csrf_token %}
-  {{ form.as_p }}
-  <input type='submit' value='Register'>
+  <div class="formItem">
+      {{ form.loginname.label_tag }}
+      {{ form.loginname }}
+  </div>
+  <div class="formItem">
+      {{ form.screenname.label_tag }}
+      {{ form.screenname }}
+  </div>
+  <div class="formItem">
+      {{ form.password1.label_tag }}
+      {{ form.password1 }}
+  </div>
+  <div class="formItem">
+      {{ form.password2.label_tag }}
+      {{ form.password2 }}
+  </div>
+  <div class="formItem">
+      <div class="shim"></div>
+      <input type="submit" value="Login" /> <a href="">Reset password</a> {# @todo {% url 'password_reset' %} #}
+  </div>
 </form>
 {% endblock %}
