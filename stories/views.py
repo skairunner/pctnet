@@ -9,6 +9,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from dj_commented_view import CommentPostMixin, CommentListMixin
+from dj_preview_mixin import PreviewMixin
 import rules
 from rules.contrib.views import PermissionRequiredMixin
 
@@ -211,7 +212,7 @@ class StoryEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         return super().get_context_data(**kwargs)
 
 
-class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, PreviewMixin, UpdateView):
     model = Chapter
     fields = ['chaptertitle', 'chaptersummary', 'chaptertext', 'dateposted', 'isdraft']
     pk_url_kwarg = 'chapterpk'
@@ -223,14 +224,13 @@ class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         form.fields['dateposted'].widget = DateInput(attrs={"type": "date"})
         return form
 
+    def preprocess_form(self, form, context):
+        context['content_preview'] = sanitizeInput(form.cleaned_data['chaptertext'])
+
     def get_context_data(self, **kwargs):
         kwargs['story'] = self.object.parent
         kwargs['chapters'] = self.object.parent.chapter_set.all().order_by('chapterorder').all()
         kwargs['buttons'] = getEditNavButtons(self.object.parent, kwargs['chapters'], self.object.chapterorder)
-        if self.request.POST.get('preview'):
-            kwargs['preview'] = True
-            draft = kwargs['form'].cleaned_data['chaptertext']
-            kwargs['content_preview'] = sanitizeInput(draft)
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):

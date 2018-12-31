@@ -24,6 +24,7 @@ dj-commented-view = {git = "https://github.com/skairunner/dj-commented-view.git"
 bleach = "*"
 mistletoe = "*"
 python-coveralls = "*"
+dj-preview-mixin = {git = "https://github.com/skairunner/dj-preview-mixin.git"}
 
 [requires]
 python_version = "3.6"

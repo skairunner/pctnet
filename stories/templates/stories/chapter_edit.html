@@ -5,7 +5,7 @@ Editing "{{ object.chaptertitle }}" – {{ object.parent.worktitle }}
 {% endblock title %}
 
 {% block content %}
-{% if preview %}
+{% if ispreview %}
   <div class='chaptertext preview'>
   {{ content_preview |safe }}
   </div>
@@ -21,7 +21,7 @@ Editing "{{ object.chaptertitle }}" – {{ object.parent.worktitle }}
   {% include "stories/edit_navbar_fragment.html" with buttons=buttons story=object.parent %}
   <form method='POST'>
     {% csrf_token %}
-    {{ form }}
+    {{ form.as_p }}
     <input type='submit' name='preview' value='Preview'>
     <input type='submit' name='save' value='Save'>
   </form>

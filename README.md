@@ -18,6 +18,10 @@ In the root directory, run the following to install dependencies:
 ```
 $ pipenv install
 ```
+If you are contributing, you should instead install including dev dependencies:
+```
+$ pipenv install --dev
+```
 
 You can subsequently use `pipenv shell` to enter the virtual environment.
 
