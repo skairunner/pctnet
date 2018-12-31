@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import DateInput
 from django.http import HttpResponseRedirect, Http404
@@ -11,7 +12,8 @@ from dj_commented_view import CommentPostMixin, CommentListMixin
 import rules
 from rules.contrib.views import PermissionRequiredMixin
 
-from datetime import datetime
+import datetime
+from sanitize import sanitizeInput
 
 from .models import Story, Chapter, Comment
 
@@ -88,7 +90,7 @@ class ChapterDetailView(CommentPostMixin, CommentListMixin, DetailView):
     def postcomment_form_valid(self, form):
         comment = form.save(commit=False)
         setattr(comment, self.parentfield, self.object)
-        comment.dateposted = datetime.now()
+        comment.dateposted = datetime.datetime.now()
         comment.author = self.request.user
         comment.save()
         return HttpResponseRedirect(self.get_postcomment_success_url())
@@ -225,7 +227,16 @@ class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         kwargs['story'] = self.object.parent
         kwargs['chapters'] = self.object.parent.chapter_set.all().order_by('chapterorder').all()
         kwargs['buttons'] = getEditNavButtons(self.object.parent, kwargs['chapters'], self.object.chapterorder)
+        if self.request.POST.get('preview'):
+            kwargs['preview'] = True
+            draft = kwargs['form'].cleaned_data['chaptertext']
+            kwargs['content_preview'] = sanitizeInput(draft)
         return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        if self.request.POST.get('preview') or self.request.POST.get('edit'):
+            return self.render_to_response(self.get_context_data(form=form))
+        return super().form_valid(form)
 
 
 class CommentDeleteView(DeleteView):

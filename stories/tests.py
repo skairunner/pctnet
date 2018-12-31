@@ -166,6 +166,26 @@ class TestStory(WebTest):
         res = self.app.get(url, user='not-author', expect_errors=True)
         self.assertIn('404', res.status)
 
+    def test_chapter_preview(self):
+        story, chapter = make_default_story()
+        res = self.app.get(reverse('editchapter', args=[chapter.id]), user='author')
+        form = res.form
+        form['chaptertext'] = '**Different** text'
+        res = form.submit('preview')
+        preview = res.html.select_one('.preview')
+        self.assertIn('<strong>Different</strong>', str(preview))
+        generalres = self.app.get(chapter.get_absolute_url(), user='author')
+        self.assertNotIn('<strong>Different</strong>', str(generalres.html))
+        # Go back to the editing field
+        res = res.form.submit('edit')
+        self.assertIn('**Different**', str(res.html.select_one('#id_chaptertext')))
+        # Go to preview and check save
+        res = res.form.submit('preview')
+        res.form.submit('save')
+        generalres = self.app.get(chapter.get_absolute_url(), user='author')
+        self.assertIn('<strong>Different</strong>', str(generalres.html))
+
+
 
 class TestComments(WebTest):
     def test_comments_sorted(self):
