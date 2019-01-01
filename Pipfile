@@ -7,8 +7,9 @@ verify_ssl = true
 coverage = "*"
 django-dynamic-fixture = "*"
 django-webtest = "*"
-pytest = "*"
 flake8 = "*"
+pyflakes = "*"
+pytest = "==4.0.1"
 
 [packages]
 dj-database-url = "*"
@@ -16,7 +17,6 @@ django-datetimepicker = "*"
 mccabe = "*"
 psycopg2-binary = "*"
 pycodestyle = "*"
-pyflakes = "*"
 pytz = "*"
 rules = "*"
 Django = "*"
