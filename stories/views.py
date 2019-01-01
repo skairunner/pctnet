@@ -125,7 +125,7 @@ def StoryToChapterRedirect(request, *args, **kwargs):
     return HttpResponseRedirect(reverse("viewchapter", args=[obj.pk, obj.firstchapter_id, slug]))
 
 
-class StorySubmitView(LoginRequiredMixin, CreateView):
+class StorySubmitView(LoginRequiredMixin, PreviewMixin, CreateView):
     fields = ["chaptertitle", "dateposted", "chaptertext", "isdraft"]
     model = Chapter  # easier to backfill Story from Chapter
     template_name = "stories/story_submit.html"
@@ -135,7 +135,11 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
         form.fields['dateposted'].widget = DateInput(attrs={"type": "date"})
         return form
 
-    def form_valid(self, form):
+    def preprocess_preview(self, form, context):
+        text = form.cleaned_data['chaptertext']
+        context['preview_markup'] = sanitizeInput(text)
+
+    def form_valid_nopreview(self, form):
         self.object = form.save(commit=False)
         self.object.author = self.request.user
         # Also produce a parent object
@@ -159,7 +163,7 @@ class StorySubmitView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ChapterSubmitView(CreateView):
+class ChapterSubmitView(LoginRequiredMixin, PreviewMixin, CreateView):
     model = Chapter
     fields = ['dateposted', 'chaptertitle', 'chaptersummary', 'chaptertext', 'isdraft']
     template_name = 'stories/chapter_new.html'
@@ -182,7 +186,10 @@ class ChapterSubmitView(CreateView):
         kwargs['story'] = s
         return super().get_context_data(**kwargs)
 
-    def form_valid(self, form):
+    def preprocess_preview(self, form, context):
+        context['preview_markup'] = sanitizeInput(form.cleaned_data['chaptertext'])
+
+    def form_valid_nopreview(self, form):
         chapter = form.save(commit=False)
         story = self.get_story()
         chapter.author = self.request.user
@@ -224,7 +231,7 @@ class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, PreviewMixin,
         form.fields['dateposted'].widget = DateInput(attrs={"type": "date"})
         return form
 
-    def preprocess_form(self, form, context):
+    def preprocess_preview(self, form, context):
         context['content_preview'] = sanitizeInput(form.cleaned_data['chaptertext'])
 
     def get_context_data(self, **kwargs):

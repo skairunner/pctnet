@@ -10,9 +10,5 @@ New story
 <p> form error </p>
 {% endif %}
 
-<form method="post" action="{% url 'submitstory' %}">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Post">
-</form>
+{% include 'stories/chaptertext_form_fragment.html' with ispreview=ispreview preview_markup=preview_markup form=form %}
 {% endblock %}

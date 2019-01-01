@@ -5,25 +5,6 @@ Editing "{{ object.chaptertitle }}" – {{ object.parent.worktitle }}
 {% endblock title %}
 
 {% block content %}
-{% if ispreview %}
-  <div class='chaptertext preview'>
-  {{ content_preview |safe }}
-  </div>
-  <form method='POST'>
-    {% csrf_token %}
-    {% for field in form %}
-      {{ field.as_hidden }}
-    {% endfor %}
-    <input type='submit' name='edit' value='Edit more'>
-    <input type='submit' name='save' value='Save'>
-  </form>
-{% else %}
-  {% include "stories/edit_navbar_fragment.html" with buttons=buttons story=object.parent %}
-  <form method='POST'>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type='submit' name='preview' value='Preview'>
-    <input type='submit' name='save' value='Save'>
-  </form>
-{% endif %}
+{% include "stories/edit_navbar_fragment.html" with buttons=buttons story=object.parent %}
+{% include 'stories/chaptertext_form_fragment.html' with ispreview=ispreview preview_markup=preview_markup form=form %}
 {% endblock %}
