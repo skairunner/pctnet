@@ -33,7 +33,7 @@ class Chapter(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     # chapters may be rearranged
     chapterorder = models.IntegerField(default=0)
-    dateposted = models.DateField(null=True)
+    dateposted = models.DateField()
     chaptertext = models.TextField(default='')
     chaptertext_html = models.TextField(default='')
     chaptertitle = models.CharField(max_length=255, default='', blank=True)
@@ -55,9 +55,6 @@ class Chapter(models.Model):
         self.slug = slugify(self.chaptertitle)
         self.chaptertext_html = sanitizeInput(self.chaptertext)
         self.chaptersummary_html = sanitizeInput(self.chaptersummary)
-        # If any required fields null, set isincomplete
-        if (not self.dateposted) or (not self.chaptertext):
-            self.isincomplete = True
         super(Chapter, self).save(*args, **kwargs)
 
 
