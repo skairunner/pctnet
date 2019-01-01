@@ -232,7 +232,7 @@ class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, PreviewMixin,
         return form
 
     def preprocess_preview(self, form, context):
-        context['content_preview'] = sanitizeInput(form.cleaned_data['chaptertext'])
+        context['preview_markup'] = sanitizeInput(form.cleaned_data['chaptertext'])
 
     def get_context_data(self, **kwargs):
         kwargs['story'] = self.object.parent

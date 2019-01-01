@@ -3,7 +3,7 @@ Preview
 <div class='chaptertext preview'>{{ preview_markup |safe }}</div>
 {% endif %}
 
-<form method="post" action="{% url 'submitstory' %}">
+<form method="post">
   {% csrf_token %}
   {% if ispreview %}
     {% for field in form %}
