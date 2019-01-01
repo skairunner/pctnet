@@ -25,5 +25,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('stories/', include('stories.urls')),
     path('user/', include('profiles.urls')),
-    path('group/', include('groups.urls'))
+    path('group/', include('groups.urls')),
+    path('messages/', include('messaging.urls')),
 ]

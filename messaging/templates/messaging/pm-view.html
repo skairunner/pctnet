@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ object.title }} (DMs)
+{% endblock %}
+
+{% block content %}
+<h1>{{ object.title }}</h1>
+{% for message in messages %}
+<div id='msg{{ message.pk }}' class='message'>
+  <div>{% include "user_inline_fragment.html" with user=message.author %} said:</div>
+  <div>{{ message.content_html |safe }}</div>
+  <div>@ {{ message.timestamp }}</div>
+</div>
+<hr>
+{% endfor %}
+{% endblock %}
