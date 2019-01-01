@@ -233,11 +233,6 @@ class ChapterEditView(LoginRequiredMixin, PermissionRequiredMixin, PreviewMixin,
         kwargs['buttons'] = getEditNavButtons(self.object.parent, kwargs['chapters'], self.object.chapterorder)
         return super().get_context_data(**kwargs)
 
-    def form_valid(self, form):
-        if self.request.POST.get('preview') or self.request.POST.get('edit'):
-            return self.render_to_response(self.get_context_data(form=form))
-        return super().form_valid(form)
-
 
 class CommentDeleteView(DeleteView):
     model = Comment
