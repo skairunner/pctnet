@@ -118,3 +118,12 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# sass
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map
+
+# ignore css in static/css, as this is vomited out by sass
+# if you need css here, put it in a subdirectory
+static/css/*.css
